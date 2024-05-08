@@ -1,0 +1,41 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-rows: auto 1fr auto;/* Primera fila para el encabezado, segunda fila para el mapa, tercera fila para el pie de página */
+    height: 100vh; /* Ocupa toda la altura de la ventana del navegador */
+}
+
+.header {
+    background: #333;
+    padding: 20px;
+    text-align: center;
+    color: whitesmoke;
+    font-size: 120%;
+}
+
+#map-container {
+    position: relative; /* Relativo para que el mapa ocupe el espacio del contenedor */
+}
+
+#footer {
+    background: #333;
+    padding: 10px;
+    text-align: center;
+    color: whitesmoke;
+}
+.custom-control {
+    display: flex;
+    align-items: center;
+}
+
+.custom-input {
+    margin-right: 5px;
+}
+
+.custom-button {
+    margin-left: 5px;
+}
