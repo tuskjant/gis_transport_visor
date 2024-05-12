@@ -8,11 +8,11 @@ export class Geocoder {
     private RVS_URL: string = "/geocodificador/invers";
     private text: string | null;
     private coord: [number, number] | null;
-    private focus: [number, number];
+    private focus: [number, number] | null;
     private layers: string = "address,topo1,topo2";
     private size: string = "1";
 
-    constructor(text: string | null = null, coord: [number, number] | null = null, focus: [number, number] = [1.8566894531250002, 41.39836479]) {
+    constructor(text: string | null = null, coord: [number, number] | null = null, focus: [number, number] | null = null) {
         if (text === null && coord === null) {
             throw new Error("Missed parameters for geocoding");
         }
@@ -37,7 +37,13 @@ export class Geocoder {
         if (this.text === null || this.text.length < 3) {
             return false;
         }
-        const urlQuery: string = `text=${encodeURIComponent(this.text)}&focus.point.lat=${this.focus[1]}&focus.point.lon=${this.focus[0]}&layers=${this.layers}&size=${this.size}`;
+        var urlQuery : string = ''
+        if (this.focus !== null) {
+            urlQuery = `text=${encodeURIComponent(this.text)}&focus.point.lat=${this.focus[1]}&focus.point.lon=${this.focus[0]}&layers=${this.layers}&size=${this.size}`;
+        }
+        else {
+             urlQuery = `text=${encodeURIComponent(this.text)}&layers=${this.layers}&size=${this.size}`;
+        }
         const url: string = this.BASE_URL + this.FWD_URL + '?' + urlQuery;
 
         try {
@@ -72,13 +78,15 @@ export class Geocoder {
 
         try {
             dist = data.features[0].properties.distancia;
-            data.features.forEach((feature: any) => {
-                if (feature.properties.distancia < dist) {
-                    dist = feature.properties.distancia;
-                    text = feature.properties.etiqueta;
-                    coords = feature.geometry.coordinates;
-                }
-            });
+            if (dist !== null) {
+                data.features.forEach((feature: any) => {
+                    if (feature.properties.distancia < dist) {
+                        dist = feature.properties.distancia;
+                        text = feature.properties.etiqueta;
+                        coords = feature.geometry.coordinates;
+                    }
+                });
+            }
         } catch (error) {
             console.error("Error accessing geocoding data.");
             throw new Error("Error accessing geocoding data.");

@@ -1,5 +1,6 @@
 import { Control, ControlPosition, DomUtil, Util, DomEvent } from 'leaflet';
-import {Geocoder} from './geocod'
+import { Geocoder } from './geocod'
+import L  from 'leaflet';
 
 
 const InputLoc = Control.extend({
@@ -19,8 +20,9 @@ const InputLoc = Control.extend({
     },
 
     //Información control personalizado
-    onAdd: function () {
+    onAdd: function (map: L.Map) {
         const controlLoc = DomUtil.create('div', 'leaflet-control leaflet-bar custom-control');
+        const self = this;
 
         // Crea el input de texto
         var input = document.createElement('input');
@@ -41,12 +43,24 @@ const InputLoc = Control.extend({
 
         // Agrega el evento de escucha al input
         input.addEventListener('keydown', async function(event) {
-            if (event.key == "Enter") { // Verifica si se presionó la tecla "Enter" (código 13)
-                // Ejecuta la acción que deseas aquí, por ejemplo, buscar
-                var searchText = input.value;
-                const geocoder = new Geocoder(input.value)
-                await geocoder.forwardGeocoding()
-                console.log('Buscar:', geocoder.getCoord());
+            if (event.key == "Enter") { 
+                var center: [number, number] = ([map.getCenter().lng, map.getCenter().lat]);  //focus al centre del mapa
+                const geocoder = new Geocoder(input.value, null, center);
+                await geocoder.forwardGeocoding();
+                const geocoderText = geocoder.getText();
+                console.log(geocoderText);
+                if (geocoderText !== null) {
+                    input.value = geocoderText;
+                }
+                
+                console.log(map.getCenter());
+                var coord = geocoder.getCoord();
+                if (coord !== null) {
+                    console.log('Buscar:', geocoder.getCoord());
+                    const marcador = L.marker([coord[1], coord[0]], {
+                        draggable: true
+                    }).addTo(map)
+                }
             }
         });
 
@@ -54,6 +68,6 @@ const InputLoc = Control.extend({
     }
 });
 
-export const inputLoc = (options?: {
+export const inputLoc = (map: L.Map, options?: {
     id?: string, position?: ControlPosition, placeHolder?: string
 }) => new InputLoc(options);
