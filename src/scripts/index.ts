@@ -3,8 +3,11 @@ import '../assets/content.css'
 import { startMapSkeleton } from './skeleton';
 import 'leaflet/dist/leaflet.css';
 import L, { Draggable, LeafletMouseEvent, point } from 'leaflet';
+import 'pelias-leaflet-plugin'
+import MyGeocoderPlugin from 'pelias-leaflet-plugin';
 import { punts } from '../assets/data/punts';
 import { inputLoc } from './inputLoc';
+
 
 
 startMapSkeleton(document);
@@ -128,5 +131,17 @@ const popupItem = L.popup().setLatLng([41.669329, 2.490061])
 
 
 
-inputLoc({ position: "topleft", placeHolder: "Posició inicial..." }).addTo(my_map)
-inputLoc( { position: "topleft", placeHolder: "Posició final..." }).addTo(my_map)
+inputLoc({ id: 'input_from', position: "topleft", placeHolder: "Posició inicial..." }).addTo(my_map)
+inputLoc({ id: 'input_to', position: "topleft", placeHolder: "Posició final..." }).addTo(my_map)
+
+/*
+var geocodingOptions = {      
+    url:'https://eines.icgc.cat/geocodificador',
+    expanded: true,
+    layers: "topo1,topo2,address",
+	  autocomplete: true,
+	  focus:false
+};
+
+L.control.geocoder((''),geocodingOptions).addTo(my_map);
+*/

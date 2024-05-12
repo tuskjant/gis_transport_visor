@@ -1,10 +1,11 @@
 import { Control, ControlPosition, DomUtil, Util, DomEvent } from 'leaflet';
+import {Geocoder} from './geocod'
 
 
 const InputLoc = Control.extend({
     //Inicialización
     initialize: function (options: {
-        position: ControlPosition, placeHolder: string
+        id:string, position: ControlPosition, placeHolder: string
 
     }) {
         Util.setOptions(this, options);
@@ -12,6 +13,7 @@ const InputLoc = Control.extend({
 
     //Opciones
     options: {
+        id: 'input_loc',
         position: 'topleft',
         placeHolder: 'Posició...'
     },
@@ -25,6 +27,7 @@ const InputLoc = Control.extend({
         input.type = 'text';
         input.placeholder = this.options.placeHolder;
         input.className = 'custom-input';
+        input.id = this.options.id;
         controlLoc.appendChild(input);
 
          // Crea el botón
@@ -37,11 +40,13 @@ const InputLoc = Control.extend({
         DomEvent.disableClickPropagation(controlLoc);
 
         // Agrega el evento de escucha al input
-        input.addEventListener('keydown', function(event) {
+        input.addEventListener('keydown', async function(event) {
             if (event.key == "Enter") { // Verifica si se presionó la tecla "Enter" (código 13)
                 // Ejecuta la acción que deseas aquí, por ejemplo, buscar
                 var searchText = input.value;
-                console.log('Buscar:', searchText);
+                const geocoder = new Geocoder(input.value)
+                await geocoder.forwardGeocoding()
+                console.log('Buscar:', geocoder.getCoord());
             }
         });
 
@@ -50,5 +55,5 @@ const InputLoc = Control.extend({
 });
 
 export const inputLoc = (options?: {
-    position?: ControlPosition, placeHolder?: string
+    id?: string, position?: ControlPosition, placeHolder?: string
 }) => new InputLoc(options);

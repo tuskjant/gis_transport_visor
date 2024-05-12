@@ -21,6 +21,9 @@
   "dependencies": {
     "@types/geojson": "^7946.0.14",
     "@types/leaflet": "^1.9.12",
-    "leaflet": "^1.9.4"
+    "axios": "^1.6.8",
+    "leaflet": "^1.9.4",
+    "leaflet-control-geocoder": "^2.4.0",
+    "pelias-leaflet-plugin": "^1.12.0"
   }
 }
