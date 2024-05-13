@@ -1,4 +1,5 @@
-// Class Geocoder for forward and reverse geocoding
+// Class Geocoder for forward and reverse geocoding 
+// Utilize the geocoder from ICGC  
 
 import axios from 'axios';
 
@@ -33,6 +34,7 @@ export class Geocoder {
         return this.coord;
     }
 
+    //Forward geocoding
     public async forwardGeocoding(): Promise<boolean | void> {
         if (this.text === null || this.text.length < 3) {
             return false;
@@ -55,10 +57,9 @@ export class Geocoder {
         }
     }
 
-    public async reverseGeocoding(): Promise<boolean | void> {
-        if (this.coord === null) {
-            return false;
-        }
+    //Reverse geocoding
+    public async reverseGeocoding(coords: [number, number]): Promise<boolean | void> {
+        this.coord = coords
         const urlQuery: string = `lat=${this.coord[1]}&lon=${this.coord[0]}&layers=${this.layers}&size=${this.size}`;
         const url: string = this.BASE_URL + this.RVS_URL + '?' + urlQuery;
 
@@ -69,35 +70,37 @@ export class Geocoder {
             console.error(error);
             return false;
         }
+        console.log(this.text)
     }
 
+    //Get coordinates from response for reverse geocoding considering nearest point
     private extractCoord(data: any): void {
-        let dist: number | null = null;
+        let dist: number ;
         let coords: [number, number] | null = null;
         let text: string | null = null;
-
         try {
             dist = data.features[0].properties.distancia;
-            if (dist !== null) {
+            if (dist !== null && dist !== undefined) {
                 data.features.forEach((feature: any) => {
-                    if (feature.properties.distancia < dist) {
+                    if (feature.properties.distancia <= dist) {
                         dist = feature.properties.distancia;
                         text = feature.properties.etiqueta;
                         coords = feature.geometry.coordinates;
                     }
                 });
             }
+            this.coord = coords;
+            this.text = text;
         } catch (error) {
             console.error("Error accessing geocoding data.");
             throw new Error("Error accessing geocoding data.");
         }
 
-        this.coord = coords;
-        this.text = text;
+
     }
 
+    //Get text from response for forward geocoding    
     private extractText(data: any): void {
-        console.log("Extracting text")
         try {
             this.coord = data.features[0].geometry.coordinates;
             this.text = data.features[0].properties.etiqueta;
@@ -105,7 +108,6 @@ export class Geocoder {
             console.error("Error accessing geocoding data.");
             throw new Error("Error accessing geocoding data.");
         }
-        console.log(this.coord)
     }
 }
 

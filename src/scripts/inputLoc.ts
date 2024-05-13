@@ -1,8 +1,9 @@
 import { Control, ControlPosition, DomUtil, Util, DomEvent } from 'leaflet';
 import { Geocoder } from './geocod'
 import L  from 'leaflet';
+import { crearMarcador, marcadores } from './marcadores';
 
-
+//Component input from - to
 const InputLoc = Control.extend({
     //Inicialización
     initialize: function (options: {
@@ -12,19 +13,18 @@ const InputLoc = Control.extend({
         Util.setOptions(this, options);
     },
 
-    //Opciones
+    //Options
     options: {
-        id: 'input_loc',
+        id: 'input_loc',  
         position: 'topleft',
         placeHolder: 'Posició...'
     },
 
-    //Información control personalizado
+    //Control
     onAdd: function (map: L.Map) {
         const controlLoc = DomUtil.create('div', 'leaflet-control leaflet-bar custom-control');
-        const self = this;
 
-        // Crea el input de texto
+        // Create input
         var input = document.createElement('input');
         input.type = 'text';
         input.placeholder = this.options.placeHolder;
@@ -32,34 +32,36 @@ const InputLoc = Control.extend({
         input.id = this.options.id;
         controlLoc.appendChild(input);
 
-         // Crea el botón
+         // Create button for positioning
         var button = document.createElement('button');
-        button.innerHTML = 'Buscar';
+        button.innerHTML = 'Ubicar';
         button.className = 'custom-button';
         controlLoc.appendChild(button);
 
-        // Evita que hacer clic en el control active eventos en el mapa
+        // Avoid that clicking on the control triggers events on the map
         DomEvent.disableClickPropagation(controlLoc);
 
-        // Agrega el evento de escucha al input
+        // Add the event listener to the input
         input.addEventListener('keydown', async function(event) {
             if (event.key == "Enter") { 
                 var center: [number, number] = ([map.getCenter().lng, map.getCenter().lat]);  //focus al centre del mapa
                 const geocoder = new Geocoder(input.value, null, center);
                 await geocoder.forwardGeocoding();
                 const geocoderText = geocoder.getText();
-                console.log(geocoderText);
+                //Show text result in input box
                 if (geocoderText !== null) {
                     input.value = geocoderText;
                 }
-                
-                console.log(map.getCenter());
+                //Remove marker if exists
                 var coord = geocoder.getCoord();
+                if (marcadores[input.id] !== null && marcadores[input.id] !== undefined) {
+                    const marcador = marcadores[input.id];
+                    marcador.remove(); 
+                    delete marcadores[input.id];
+                }
+                //Create marker linked to geocoder 
                 if (coord !== null) {
-                    console.log('Buscar:', geocoder.getCoord());
-                    const marcador = L.marker([coord[1], coord[0]], {
-                        draggable: true
-                    }).addTo(map)
+                    crearMarcador(input.id, coord[1], coord[0], map, geocoder, )
                 }
             }
         });

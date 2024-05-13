@@ -1,3 +1,5 @@
+//Skeleton for map app
+
 const contentHtml = (projectTitle: string, nameLastname: string) => `
     <div class="header">
         <div>${projectTitle}</div>
