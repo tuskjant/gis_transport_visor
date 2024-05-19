@@ -1,7 +1,9 @@
 import { Control, ControlPosition, DomUtil, Util, DomEvent } from 'leaflet';
+//import { Geocoder } from './test/geocod_test'
 import { Geocoder } from './geocod'
 import L  from 'leaflet';
 import { crearMarcador, marcadores } from './marcadores';
+import { marcadoresPath } from './routePath';
 
 //Component input from - to
 const InputLoc = Control.extend({
@@ -32,11 +34,12 @@ const InputLoc = Control.extend({
         input.id = this.options.id;
         controlLoc.appendChild(input);
 
-         // Create button for positioning
+         // Create button for direct positioning
+        /*
         var button = document.createElement('button');
         button.innerHTML = 'Ubicar';
         button.className = 'custom-button';
-        controlLoc.appendChild(button);
+        controlLoc.appendChild(button);*/
 
         // Avoid that clicking on the control triggers events on the map
         DomEvent.disableClickPropagation(controlLoc);
@@ -61,8 +64,10 @@ const InputLoc = Control.extend({
                 }
                 //Create marker linked to geocoder 
                 if (coord !== null) {
-                    crearMarcador(input.id, coord[1], coord[0], map, geocoder, )
-                }
+                    crearMarcador(input.id, coord[1], coord[0], map, geocoder)
+                    marcadoresPath(map)
+
+                }  
             }
         });
 

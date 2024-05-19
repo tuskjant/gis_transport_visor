@@ -1,5 +1,8 @@
 import L from 'leaflet'
 import { Geocoder } from './geocod';
+//import { Geocoder } from './test/geocod_test'
+import { marcadoresPath } from './routePath';
+
 
 const marcadores: { [id: string]: L.Marker } = {};
 
@@ -15,7 +18,7 @@ export function crearMarcador(id: string, latitud: number, longitud: number, map
 
     // Add marker to map
     marcador.addTo(map);
-    // Trigger when stop movin the marker
+    // Trigger when stop moving the marker
     marcador.on("moveend", async () => {
         //reverse geocoding
         await geocoder.reverseGeocoding([marcador.getLatLng().lng, marcador.getLatLng().lat]);
@@ -25,6 +28,7 @@ export function crearMarcador(id: string, latitud: number, longitud: number, map
         if (input) {
             input.value = texto || '';
         }
+        marcadoresPath(map)
     });
 }
 
