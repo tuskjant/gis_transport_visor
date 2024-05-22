@@ -2,11 +2,15 @@ import { Control, ControlPosition, DomUtil, Util, DomEvent } from 'leaflet';
 //import { Geocoder } from './test/geocod_test'
 import { Geocoder } from './geocod'
 import L  from 'leaflet';
-import { MarcadoresManager } from './marcadores';
+import { crearMarcador, marcadores } from './marcadores';
+import { marcadoresPath } from './routePath';
+//import { MarcadoresManager } from './marcadores2';
+
+
 
 //Component input from - to
 const InputLoc = Control.extend({
-    //Initialize
+    //Inicialización
     initialize: function (options: {
         id:string, position: ControlPosition, placeHolder: string
 
@@ -33,10 +37,17 @@ const InputLoc = Control.extend({
         input.id = this.options.id;
         controlLoc.appendChild(input);
 
+         // Create button for direct positioning
+        /*
+        var button = document.createElement('button');
+        button.innerHTML = 'Ubicar';
+        button.className = 'custom-button';
+        controlLoc.appendChild(button);*/
+
         // Avoid that clicking on the control triggers events on the map
         DomEvent.disableClickPropagation(controlLoc);
-     
-        // Add the event listener to the input
+        
+        // Add the event listener to the text input
         input.addEventListener('keydown', async function(event) {
             if (event.key == "Enter") { 
                 var center: [number, number] = ([map.getCenter().lng, map.getCenter().lat]);  //focus al centre del mapa
@@ -47,13 +58,23 @@ const InputLoc = Control.extend({
                 if (geocoderText !== null) {
                     input.value = geocoderText;
                 }
+                //add marker
+                
 
-                //Create marker linked to geocoder 
+                //Remove marker if exists
                 var coord = geocoder.getCoord();
-                if (coord !== null) {
-                    const marcadoresManager = new MarcadoresManager(map, geocoder);
-                    MarcadoresManager.crearMarcador(input.id, coord[1], coord[0]);
+
+                if (marcadores[input.id] !== null && marcadores[input.id] !== undefined) {
+                    const marcador = marcadores[input.id];
+                    marcador.remove(); 
+                    delete marcadores[input.id];
                 }
+                //Create marker linked to geocoder 
+                if (coord !== null) {
+                    crearMarcador(input.id, coord[1], coord[0], map, geocoder);
+                    marcadoresPath(map)
+
+                }  
             }
         });
 

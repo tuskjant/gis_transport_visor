@@ -2,11 +2,11 @@ import '../assets/style.css'
 import '../assets/content.css'
 import { startMapSkeleton } from './skeleton';
 import 'leaflet/dist/leaflet.css';
-import L, { Draggable, LeafletMouseEvent, point } from 'leaflet';
+import L from 'leaflet';
 import 'pelias-leaflet-plugin'
-import MyGeocoderPlugin from 'pelias-leaflet-plugin';
-import { punts } from '../assets/data/punts';
 import { inputLoc } from './inputLoc';
+import { Tsalesmanp } from './tsalesmanp';
+
 
 
 
@@ -26,8 +26,13 @@ L.control.zoom({ position: 'topright'  }).addTo(my_map);
 
 
 // Inputs from and to
-inputLoc(my_map, { id: 'input_from', position: "topleft", placeHolder: "Posició inicial..." }).addTo(my_map)
-inputLoc(my_map, { id: 'input_to', position: "topleft", placeHolder: "Posició final..." }).addTo(my_map)
+inputLoc(my_map, { id: 'input_from', position: "topleft", placeHolder: "Posició inicial..." }).addTo(my_map);
+inputLoc(my_map, { id: 'input_passing', position: "topleft", placeHolder: "Posició final..." }).addTo(my_map);
+inputLoc(my_map, { id: 'input_passing2', position: "topleft", placeHolder: "Posició final..." }).addTo(my_map);
+inputLoc(my_map, { id: 'input_to', position: "topleft", placeHolder: "Posició final..." }).addTo(my_map);
+
+var salesman = new Tsalesmanp([[2.496255, 41.692871], [2.4905873526786393, 41.69201021411497], [2.4904812708389947, 41.6898831366636], [2.4965127714595536, 41.68982691212736]]);
+salesman.getRoute()
 
 /*
 var geocodingOptions = {      

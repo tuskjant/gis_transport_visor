@@ -1,0 +1,93 @@
+{
+  "code": "Ok",
+  "trips": [
+    {
+      "geometry": {
+        "coordinates": [
+          [2.496299, 41.692811],
+          [2.496188, 41.692766],
+          [2.495805, 41.693285],
+          [2.494259, 41.692627],
+          [2.494197, 41.692661],
+          [2.494099, 41.692655],
+          [2.495759, 41.691748],
+          [2.494956, 41.692847],
+          [2.497918, 41.694103],
+          [2.498387, 41.693484],
+          [2.498357, 41.693391],
+          [2.496969, 41.693084],
+          [2.496299, 41.692811]
+        ],
+        "type": "LineString"
+      },
+      "legs": [
+        {
+          "steps": [],
+          "summary": "",
+          "weight": 81.8,
+          "duration": 79,
+          "distance": 628.5
+        },
+        {
+          "steps": [],
+          "summary": "",
+          "weight": 69.6,
+          "duration": 69.6,
+          "distance": 419.4
+        },
+        {
+          "steps": [],
+          "summary": "",
+          "weight": 218.9,
+          "duration": 218.9,
+          "distance": 1423.4
+        },
+        {
+          "steps": [],
+          "summary": "",
+          "weight": 197.7,
+          "duration": 197.7,
+          "distance": 1411.5
+        }
+      ],
+      "weight_name": "routability",
+      "weight": 568,
+      "duration": 565.2,
+      "distance": 3882.8
+    }
+  ],
+  "waypoints": [
+    {
+      "waypoint_index": 0,
+      "trips_index": 0,
+      "hint": "_U0JgP___39SAAAAYgAAAAkAAAAAAAAAhT5lQhwgKEG2AsZAAAAAAFIAAABiAAAACQAAAAAAAAAqBQAAKxcmAIsufAL_FiYAxy58AgEAHw9JGmUu",
+      "distance": 7.604832896,
+      "name": "Carrer de Jaume I",
+      "location": [2.496299, 41.692811]
+    },
+    {
+      "waypoint_index": 1,
+      "trips_index": 0,
+      "hint": "AVIJgBVSCYBLAAAAPQAAAAAAAAAAAAAArldSQp6xJ0IAAAAAAAAAAEsAAAA9AAAAAAAAAAAAAAAqBQAAwQAmAG4rfALbACYAait8AgAAzwBJGmUu",
+      "distance": 2.210157965,
+      "name": "Carrer de l'Univers",
+      "location": [2.490561, 41.692014]
+    },
+    {
+      "waypoint_index": 2,
+      "trips_index": 0,
+      "hint": "5lEJgP___38CAAAAzgAAAAAAAAAAAAAAFpq8P4vUDUMAAAAAAAAAAAIAAADOAAAAAAAAAAAAAAAqBQAAYAAmACgjfAJxACYAGyN8AgAA3wJJGmUu",
+      "distance": 2.022054847,
+      "name": "Carrer de Santa Fe",
+      "location": [2.490464, 41.689896]
+    },
+    {
+      "waypoint_index": 3,
+      "trips_index": 0,
+      "hint": "VkcJgP___39FAAAAggAAAAAAAAAAAAAATVBBQkQsKEIAAAAAAAAAAEUAAACCAAAAAAAAAAAAAAAqBQAARxgmAJAifAIBGCYA4yJ8AgAA3w5JGmUu",
+      "distance": 10.90682004,
+      "name": "Carrer Nicaragua",
+      "location": [2.496583, 41.689744]
+    }
+  ]
+}

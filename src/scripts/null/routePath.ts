@@ -37,9 +37,4 @@ export async function marcadoresPath(map: L.Map) {
     }
 }
 
-function popupPoint(geometryCoordinates: [number,number][]) {
-    
-    
 
-
-}
