@@ -7,6 +7,7 @@ export class Tsalesmanp {
     private routePoints: [number, number][] = [];
     private source: string = 'first';
     private destination: string = 'any';
+    private roundtrip: string = 'true';
     private duration: number = 0;
     private distance: number = 0;
     private geometry: any;
@@ -20,7 +21,7 @@ export class Tsalesmanp {
             return `${point[0]},${point[1]}`;
         }).join(';');
 
-        const url_query: string = `${routeString}?source=${this.source}&destination=${this.destination}&geometries=geojson`;
+        const url_query: string = `${routeString}?roundtrip=${this.roundtrip}&source=${this.source}&destination=${this.destination}&geometries=geojson`;
         const url: string = this.BASE_URL + this.ROUTE_URL + url_query;
 
         try {

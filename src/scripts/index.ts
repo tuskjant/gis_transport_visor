@@ -1,5 +1,6 @@
 import '../assets/style.css'
 import '../assets/content.css'
+import '../assets/leaflet_awesome_number_markers.css'
 import { startMapSkeleton } from './skeleton';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';

@@ -9,7 +9,7 @@ export class Routing {
     private stop: [number, number];
     private duration: number = 0;
     private distance: number = 0;
-    private geometry: any;
+    private geometry: L.GeoJSON | null = null;
 
     constructor(coord_start: [number, number], coord_stop: [number, number]) {
         this.start = coord_start;
