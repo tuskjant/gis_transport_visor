@@ -3,6 +3,8 @@ import { Control, ControlPosition, DomUtil, Util, DomEvent } from 'leaflet';
 import { Geocoder } from './geocod'
 import L  from 'leaflet';
 import { MarcadoresManager } from './marcadores';
+import CardControl from './cardControl';
+
 
 //Component input from - to
 const InputLoc = Control.extend({
@@ -51,8 +53,17 @@ const InputLoc = Control.extend({
                 //Create marker linked to geocoder 
                 var coord = geocoder.getCoord();
                 if (coord !== null) {
-                    const marcadoresManager = new MarcadoresManager(map, geocoder);
-                    MarcadoresManager.crearMarcador(input.id, coord[1], coord[0]);
+                  const marcadoresManager = new MarcadoresManager(
+                    map,
+                    geocoder
+                  );
+                  MarcadoresManager.crearMarcador(input.id, coord[1], coord[0]);
+
+                  // Create a new card and add it to the CardControl
+                  const cardControl = new CardControl();
+                  cardControl.addTo(map)  
+                  cardControl.addCard(input.value);
+                  cardControl.addCard("hola")  
                 }
             }
         });

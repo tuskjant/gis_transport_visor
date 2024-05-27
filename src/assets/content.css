@@ -39,3 +39,30 @@
 .custom-button {
     margin-left: 5px;
 }
+
+.custom-control-container {
+    position: relative;
+    padding: 10px;
+}
+
+.card {
+    background: white;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: move;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-text {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.remove-btn {
+    cursor: pointer;
+    color: red;
+}

@@ -7,8 +7,7 @@ import L from 'leaflet';
 import 'pelias-leaflet-plugin'
 import { inputLoc } from './inputLoc';
 import { Tsalesmanp } from './tsalesmanp';
-
-
+import CardControl from './cardControl';
 
 
 startMapSkeleton(document);
@@ -24,13 +23,23 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 my_map.zoomControl.remove();
 L.control.zoom({ position: 'topright'  }).addTo(my_map);
 
-
+/*
+const cardControl = new CardControl();
+cardControl.addTo(my_map);
+cardControl.addCard("hola");
+*/
 
 // Inputs from and to
 inputLoc(my_map, { id: 'input_from', position: "topleft", placeHolder: "Posició inicial..." }).addTo(my_map);
 inputLoc(my_map, { id: 'input_passing', position: "topleft", placeHolder: "Posició final..." }).addTo(my_map);
 inputLoc(my_map, { id: 'input_passing2', position: "topleft", placeHolder: "Posició final..." }).addTo(my_map);
 inputLoc(my_map, { id: 'input_to', position: "topleft", placeHolder: "Posició final..." }).addTo(my_map);
+
+
+
+
+
+
 
 var salesman = new Tsalesmanp([[2.496255, 41.692871], [2.4905873526786393, 41.69201021411497], [2.4904812708389947, 41.6898831366636], [2.4965127714595536, 41.68982691212736]]);
 salesman.getRoute()
