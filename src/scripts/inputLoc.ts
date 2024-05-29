@@ -45,6 +45,8 @@ const InputLoc = Control.extend({
                 const geocoder = new Geocoder(input.value, null, center);
                 await geocoder.forwardGeocoding();
                 const geocoderText = geocoder.getText();
+                
+
                 //Show text result in input box
                 if (geocoderText !== null) {
                     input.value = geocoderText;

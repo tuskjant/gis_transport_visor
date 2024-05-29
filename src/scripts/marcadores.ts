@@ -4,6 +4,7 @@ import { Routing } from './route'
 import { Tsalesmanp } from './tsalesmanp';
 import { AwesomeNumberMarkers, AwesomeNumberMarkerOptions } from './leafletAwesomeNumberMarkers';
 import "leaflet-arrowheads";
+import CardControl from './cardControl';
 
 
 /*MarcadoresManager: creates markers, route information, draws 
@@ -12,6 +13,7 @@ export class MarcadoresManager {
     private static marcadores: { [id: string]: L.Marker } = {};
     private static map: L.Map;
     private static geocoder: Geocoder;
+    private static cardControl: CardControl;
     private static routeLine: L.Polyline | null = null;
 
     constructor(map: L.Map, geocoder: Geocoder) {
