@@ -13,7 +13,6 @@ export class MarcadoresManager {
     private static marcadores: { [id: string]: L.Marker } = {};
     private static map: L.Map;
     private static geocoder: Geocoder;
-    private static cardControl: CardControl;
     private static routeLine: L.Polyline | null = null;
 
     constructor(map: L.Map, geocoder: Geocoder) {
@@ -29,12 +28,13 @@ export class MarcadoresManager {
         }
 
         //Create marker
-        const ultimoMarcador = (Object.keys(this.marcadores).length + 1).toString();
+        //const ultimoMarcador = (Object.keys(this.marcadores).length + 1).toString();
+      
         const awesomeNumberMarkerIcon = new AwesomeNumberMarkers({
             icon: 'home',
             markerColor: 'blue',
             numberColor: 'white',
-            number: ultimoMarcador,
+            number: id,
         } as AwesomeNumberMarkerOptions);
 
         const marcador = L.marker([latitud, longitud], {
@@ -67,9 +67,22 @@ export class MarcadoresManager {
             }
 
             // Update route
-            console.log("En marcadores2 -> a marcadores.path");
             MarcadoresManager.marcadoresPath();
         });
+      
+      // Remove marker
+      marcador.on("dblclick", () => {
+        MarcadoresManager.eliminarMarcador(id); //remove marker
+        if (MarcadoresManager.routeLine != null) {
+          this.map.removeLayer(MarcadoresManager.routeLine);
+        } // remove routeline 
+        const input = document.getElementById(id) as HTMLInputElement; //remove text from input
+        if (input) {
+          input.value = "";
+        }
+        MarcadoresManager.marcadoresPath(); // redraw routeline 
+      });
+      
     }
 
     public static getMarcadores() {
@@ -138,10 +151,6 @@ export class MarcadoresManager {
             })
             .addTo(this.map);
   
-      /*  
-      this.routeLine = L.geoJSON(routeGeometry, { style: route_style }).addTo(
-        this.map
-      );*/
 
       //fit map to route bounds
       const bounds = this.routeLine.getBounds();
@@ -160,6 +169,7 @@ export class MarcadoresManager {
         .openOn(this.map);
     }
 
+    //_Calculate route in case of 3 points
     public static async route3points() {
       //Delete route if exist
       if (MarcadoresManager.routeLine != null) {
@@ -177,10 +187,6 @@ export class MarcadoresManager {
       const trip = new Tsalesmanp(coordenadas);
       await trip.getRoute();
       const routeGeometry = trip.getGeometry();
-      const route_style = {
-        color: "#D557E8",
-        weight: 5,
-      };
 
       // convert coordinates from geojson to leaflet
       var coordinates = routeGeometry.coordinates.map(function (
@@ -204,10 +210,16 @@ export class MarcadoresManager {
         })
         .addTo(this.map);
 
-      /*  
-      this.routeLine = L.geoJSON(routeGeometry, { style: route_style }).addTo(
-        this.map
-      );*/
+      //Show route info
+      const geometryCoordinates = routeGeometry.coordinates;
+      const midpoint =
+        geometryCoordinates[Math.round(geometryCoordinates.length / 2)];
+      const popupItem = L.popup()
+        .setLatLng([midpoint[1], midpoint[0]])
+        .setContent(
+          `<h5>Temps: ${trip.getDuration()}</h5><h5>Distancia: ${trip.getDistance()}</h5><h5>Ruta: ${trip.getRouteOrder()}</h5>`
+        )
+        .openOn(this.map);
 
       //fit map to route bounds
       const bounds = this.routeLine.getBounds();

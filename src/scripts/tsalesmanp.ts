@@ -11,6 +11,7 @@ export class Tsalesmanp {
     private duration: number = 0;
     private distance: number = 0;
     private geometry: any;
+    private routeOrder: number[] = [];
 
     constructor(points: [number, number][]) {
         this.routePoints = points;
@@ -37,6 +38,10 @@ export class Tsalesmanp {
             this.duration = data.trips[0].duration;
             this.distance = data.trips[0].distance;
             this.geometry = data.trips[0].geometry;
+            for (const element of data.waypoints) {
+              this.routeOrder.push(element.waypoint_index);
+            }
+
         } catch (error) {
             throw new Error("Error accessing routing data.");
         }
@@ -53,6 +58,12 @@ export class Tsalesmanp {
     getGeometry(): any {
         return this.geometry;
     }
+
+    getRouteOrder(): string {
+        return this.routeOrder.join('->');
+    }
+
+
 
 
 }

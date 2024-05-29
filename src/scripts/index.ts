@@ -8,6 +8,7 @@ import 'pelias-leaflet-plugin'
 import { inputLoc } from './inputLoc';
 import { Tsalesmanp } from './tsalesmanp';
 import CardControl from './cardControl';
+import 'leaflet-easybutton';
 
 
 startMapSkeleton(document);
@@ -30,10 +31,27 @@ cardControl.addCard("hola");
 */
 
 // Inputs from and to
-inputLoc(my_map, { id: 'input_from', position: "topleft", placeHolder: "Posició inicial..." }).addTo(my_map);
-inputLoc(my_map, { id: 'input_passing', position: "topleft", placeHolder: "Posició final..." }).addTo(my_map);
-inputLoc(my_map, { id: 'input_passing2', position: "topleft", placeHolder: "Posició final..." }).addTo(my_map);
-inputLoc(my_map, { id: 'input_to', position: "topleft", placeHolder: "Posició final..." }).addTo(my_map);
+inputLoc(my_map, { id: 'i', position: "topleft", placeHolder: "Inici..." }).addTo(my_map);
+inputLoc(my_map, { id: 'f', position: "topleft", placeHolder: "Destí..." }).addTo(my_map);
+
+
+var last_input: number = 1
+
+const myButton = L.easyButton(
+  "fa-plus-circle",
+  () => {
+    inputLoc(my_map, {
+      id: `p${last_input}`,
+      position: "topleft",
+      placeHolder: "Parada...",
+    }).addTo(my_map);
+    last_input ++;
+
+  },
+  "Travel Salesman Problem"
+).addTo(my_map);
+
+
 
 
 
