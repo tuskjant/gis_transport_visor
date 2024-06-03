@@ -1,8 +1,8 @@
-// Class Geocoder for forward and reverse geocoding 
-// Utilize the geocoder from ICGC  
-
 import axios from 'axios';
 
+/**  Class Geocoder for forward and reverse geocoding
+* Utilize the geocoder from ICGC: https://eines.icgc.cat
+*/
 export class Geocoder {
     private BASE_URL: string = "https://eines.icgc.cat";
     private FWD_URL: string = "/geocodificador/cerca";
@@ -13,6 +13,12 @@ export class Geocoder {
     private layers: string = "address,topo1,topo2";
     private size: string = "1";
 
+    /**
+     * Creates an instance of class Geocoder
+     * @param text text describing location for forward geocoding
+     * @param coord coordinates (long, lat) for reverse geocoding
+     * @param focus coordinates (long, lat) of point center to priorize results
+     */
     constructor(text: string | null = null, coord: [number, number] | null = null, focus: [number, number] | null = null) {
         if (text === null && coord === null) {
             throw new Error("Missed parameters for geocoding");

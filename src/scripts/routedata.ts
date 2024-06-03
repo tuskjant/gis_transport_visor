@@ -1,3 +1,12 @@
+/**
+ * Functions to format time and distance data from OSRM API
+ */
+
+/**
+ * Converts duration in seconds to hours and minutes in string format
+ * @param duration number of seconds
+ * @returns 
+ */
 export function formatDuration(duration: number): string {
     let formatDuration: string;
     var minDur = duration / 60;
@@ -13,6 +22,11 @@ export function formatDuration(duration: number): string {
     return formatDuration;
 }
 
+/**
+ * Converts distance from meters to km and meters in string format
+ * @param distance number of meters
+ * @returns 
+ */
 export function formatDistance(distance: number): string {
         let formatDist: string;
         if (distance > 1000) {

@@ -1,22 +1,33 @@
 import axios from 'axios';
 import { formatDistance, formatDuration } from './routedata';
 
+/**
+ * Class for route calculation between more than two points using the OSRM API https://project-osrm.org/
+ * Prepared to use on localhost:5000 (https://github.com/Project-OSRM/osrm-backend)
+ * API trip service: it solves the Traveling Salesman Problem (TSP) considering
+ * roundtrip from firstpoint
+ */
 export class Tsalesmanp {
     private BASE_URL: string = "http://127.0.0.1:5000/";
     private ROUTE_URL: string = "trip/v1/driving/";
-    private routePoints: [number, number][] = [];
-    private source: string = 'first';
+    private routePoints: [number, number][] = []; //route points, first point is starting point (long, lat)
+    private source: string = 'first'; //first point is always starting point
     private destination: string = 'any';
     private roundtrip: string = 'true';
     private duration: number = 0;
     private distance: number = 0;
     private geometry: any;
-    private routeOrder: number[] = [];
+    private routeOrder: number[] = []; // order of route, first point is always starting point
 
+    /**
+     * Creates an instance of Tsalesmanp
+     * @param points array of point coordinattes to travel, first point is always start point  (long, lat)
+     */
     constructor(points: [number, number][]) {
         this.routePoints = points;
     }
 
+    // Get route data using the api trip service
     async getRoute(): Promise<void> {
         const routeString = this.routePoints.map((point) => {
             return `${point[0]},${point[1]}`;
@@ -33,6 +44,7 @@ export class Tsalesmanp {
         }     
     }
 
+    // Extract the route information from data
     private processRoutingData(data: any): void {
         try {
             this.duration = data.trips[0].duration;
@@ -60,7 +72,10 @@ export class Tsalesmanp {
     }
 
     getRouteOrder(): string {
-        return this.routeOrder.join('->');
+        var routeOrder: string = this.routeOrder.join(" ⇨ ");
+        routeOrder = routeOrder.replace('0', 'i');
+        routeOrder = routeOrder + " ⇨ i";
+        return routeOrder;
     }
 
 

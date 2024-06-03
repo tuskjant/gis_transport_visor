@@ -1,3 +1,7 @@
+/* 
+*Declaration for leaflet-easybutton control
+*/
+
 declare module "leaflet-easybutton" {
   import * as L from "leaflet";
 

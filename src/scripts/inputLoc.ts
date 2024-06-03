@@ -5,9 +5,16 @@ import L  from 'leaflet';
 import { MarcadoresManager } from './marcadores';
 
 
-//Component input from - to
+/** Leaflet control to add an input for location
+* Input component to enter directions from, to, stopover  
+*/
 const InputLoc = Control.extend({
-    //Initialize
+   /**  Initializes the control with the provided options
+   * @param {Object} options - Options for the control.
+   * @param {string} options.id - The ID of the control (from, to)
+   * @param {ControlPosition} options.position - The position of the control on the map.
+   * @param {string} options.placeHolder - The placeholder text for the input.
+   */
     initialize: function (options: {
         id:string, position: ControlPosition, placeHolder: string
 
@@ -51,7 +58,7 @@ const InputLoc = Control.extend({
                     input.value = geocoderText;
                 }
 
-                //Create marker linked to geocoder 
+                //Create marker linked to geocoder using MarcadoresManager
                 var coord = geocoder.getCoord();
                 if (coord !== null) {
                   const marcadoresManager = new MarcadoresManager(
@@ -67,6 +74,6 @@ const InputLoc = Control.extend({
     }
 });
 
-export const inputLoc = (map: L.Map, options?: {
+export const inputLoc = (options?: {
     id?: string, position?: ControlPosition, placeHolder?: string
 }) => new InputLoc(options);

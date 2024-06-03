@@ -1,4 +1,4 @@
-//Skeleton for map app
+/*Skeleton for map app, it adds a header and a footer  */
 
 const contentHtml = (projectTitle: string, nameLastname: string) => `
     <div class="header">
