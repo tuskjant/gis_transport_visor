@@ -8,7 +8,8 @@ import { formatDistance, formatDuration } from './routedata';
  * API route service
  */
 export class Routing {
-    private BASE_URL: string = "http://127.0.0.1:5000/";
+    //private BASE_URL: string = "http://127.0.0.1:5000/";
+    private BASE_URL: string = "http://router.project-osrm.org/";
     private ROUTE_URL: string = "route/v1/driving/";
     private start: [number, number]; //start point to calculate route (long, lat)
     private stop: [number, number]; // end point to calculate route (long, lat)
@@ -43,7 +44,6 @@ export class Routing {
     // Extract the route information from data
     private processRoutingData(data: any): void {
         try {
-            console.log(data);
             this.duration = data.routes[0].duration;
             this.distance = data.routes[0].distance;
             this.geometry = data.routes[0].geometry;
@@ -65,6 +65,7 @@ export class Routing {
 
     getGeometry(): any {
         return this.geometry;
+        //return "hola"
     }
 
     getStart(): [number, number] {

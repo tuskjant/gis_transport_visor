@@ -19,5 +19,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "src/scripts/marcadores.ts"]
+  "include": ["src", "src/scripts/marcadores.ts", "jest.config.cjs"]
 }
