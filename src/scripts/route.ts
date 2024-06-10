@@ -8,8 +8,8 @@ import { formatDistance, formatDuration } from './routedata';
  * API route service
  */
 export class Routing {
-    //private BASE_URL: string = "http://127.0.0.1:5000/";
-    private BASE_URL: string = "http://router.project-osrm.org/";
+    private BASE_URL: string = "http://127.0.0.1:5000/";
+    //private BASE_URL: string = "http://router.project-osrm.org/";
     private ROUTE_URL: string = "route/v1/driving/";
     private start: [number, number]; //start point to calculate route (long, lat)
     private stop: [number, number]; // end point to calculate route (long, lat)

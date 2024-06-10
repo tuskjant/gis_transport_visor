@@ -3,6 +3,54 @@
     padding: 0;
 }
 
+#map {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100%;
+    background: white;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+    z-index: 1000;
+    padding: 5px;
+    /* Asegura que el panel esté por encima del mapa */
+}
+
+.sidebar.open {
+    transform: translateX(0);
+}
+
+#text-sidebar h2{
+    margin: 10px;
+}
+
+#text-sidebar p {
+    margin: 10px;
+}
+
+.toggle-btn {
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    background: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    transition: left 0.3s ease;
+    z-index: 1001;
+    margin: 5px;
+    /* Asegura que el botón esté por encima del mapa y del panel */
+}
+
 .grid-container {
     display: grid;
     grid-template-rows: auto 1fr auto;/* Primera fila para el encabezado, segunda fila para el mapa, tercera fila para el pie de página */
@@ -21,6 +69,10 @@
     position: relative; /* Relativo para que el mapa ocupe el espacio del contenedor */
 }
 
+#map-container {
+    flex-grow: 1;
+}
+
 #footer {
     background: #333;
     padding: 10px;
@@ -33,7 +85,8 @@
 }
 
 .custom-input {
-    margin-right: 5px;
+    padding: 5px;
+    width: 250px;
 }
 
 .custom-button {
@@ -42,27 +95,18 @@
 
 .custom-control-container {
     position: relative;
-    padding: 10px;
+
 }
 
-.card {
-    background: white;
-    padding: 10px;
-    margin-bottom: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    cursor: move;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.leaflet-control{
+    margin-top:10px;
+    margin-left:5px;
 }
 
-.card-text {
-    flex-grow: 1;
-    margin-right: 10px;
+.fa {
+    margin: 10px;
 }
 
-.remove-btn {
-    cursor: pointer;
-    color: red;
-}
+
+
+

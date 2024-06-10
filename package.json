@@ -32,6 +32,7 @@
     "leaflet-arrowheads": "^1.4.0",
     "leaflet-control-geocoder": "^2.4.0",
     "leaflet-easybutton": "^2.4.0",
+    "leaflet-geocoder-mapzen": "^1.9.4",
     "leaflet-polylinedecorator": "^1.6.0",
     "pelias-leaflet-plugin": "^1.12.0",
     "sortablejs": "^1.15.2"

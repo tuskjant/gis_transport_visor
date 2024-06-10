@@ -8,8 +8,8 @@ import { formatDistance, formatDuration } from './routedata';
  * roundtrip from firstpoint
  */
 export class Tsalesmanp {
-    //private BASE_URL: string = "http://127.0.0.1:5000/";
-    private BASE_URL: string = "http://router.project-osrm.org/";
+    private BASE_URL: string = "http://127.0.0.1:5000/";
+    //private BASE_URL: string = "http://router.project-osrm.org/";
     private ROUTE_URL: string = "trip/v1/driving/";
     private routePoints: [number, number][] = []; //route points, first point is starting point (long, lat)
     private source: string = 'first'; //first point is always starting point

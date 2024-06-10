@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.0] - 2024-06-06
+## [1.0.0] - 2024-06-07
 ### Added
 - Visor de mapes bàsic amb Leaflet
 - Geocodificador d'adreces ICGC

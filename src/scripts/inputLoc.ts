@@ -32,6 +32,7 @@ const InputLoc = Control.extend({
     //Control
     onAdd: function (map: L.Map) {
         const controlLoc = DomUtil.create('div', 'leaflet-control leaflet-bar custom-control');
+        controlLoc.id = 'input-loc-container';
 
         // Create input
         var input = document.createElement('input');
@@ -39,7 +40,12 @@ const InputLoc = Control.extend({
         input.placeholder = this.options.placeHolder;
         input.className = 'custom-input';
         input.id = this.options.id;
-        controlLoc.appendChild(input);
+
+        if (input) {
+            controlLoc.appendChild(input);
+        } else {
+            console.error('Error: No se pudo crear el elemento input correctamente.');
+        }
 
         // Avoid that clicking on the control triggers events on the map
         DomEvent.disableClickPropagation(controlLoc);

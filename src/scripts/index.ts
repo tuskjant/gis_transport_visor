@@ -1,13 +1,12 @@
-import '../assets/style.css'
 import '../assets/content.css'
 import '../assets/leaflet_awesome_number_markers.css'
 import 'leaflet/dist/leaflet.css';
 import { startMapSkeleton } from './skeleton';
 import L from 'leaflet';
 import { inputLoc } from './inputLoc';
-import 'leaflet-easybutton';
 
-//Viewer skeleton: headera and footer
+
+//Viewer skeleton: header and footer
 startMapSkeleton(document);
 
 //Map - centered at Sant Celoni
@@ -18,27 +17,51 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(my_map);
 
+// Zoom control topright
 my_map.zoomControl.remove();
-L.control.zoom({ position: 'topright'  }).addTo(my_map);
+L.control.zoom({ position: 'topright' }).addTo(my_map);
+
 
 // Inputs from and to
-inputLoc({ id: 'i', position: "topleft", placeHolder: "Inici..." }).addTo(my_map);
-inputLoc({ id: 'p1', position: "topleft", placeHolder: "Destí..." }).addTo(my_map);
+const sidebarContent = document.getElementById('sidebar-content');
 
-// Counter for inputs (case TSP)
-var next_input: number = 2
-// Button to add more inputs (case TSP)
-const myButton = L.easyButton(
-  "fa-plus-circle",
-  () => {
-    inputLoc({
-      id: `p${next_input}`,
-      position: "topleft",
-      placeHolder: "Parada...",
-    }).addTo(my_map);
-    next_input ++;
+if (sidebarContent) {
+  const input1 = inputLoc({ id: 'i', placeHolder: "Inici..." });
+  const input2 = inputLoc({ id: 'p1', placeHolder: "Destí..." });
 
-  },
-  "Travel Salesman Problem"
-).addTo(my_map);
+  const input1Container = input1.onAdd(my_map);
+  const input2Container = input2.onAdd(my_map);
+
+  if (input1Container && input2Container) {
+    sidebarContent.appendChild(input1Container);
+    sidebarContent.appendChild(input2Container);
+
+    // Counter for inputs (case TSP)
+    let next_input: number = 2;
+
+    // Button to add more inputs (case TSP)
+    const button = document.createElement('button');
+    button.className = 'leaflet-bar leaflet-control';
+    button.innerHTML = '<p class="fa">🞧</p>';
+    button.title = "Travel Salesman Problem";
+    button.style.cursor = 'pointer';
+
+    button.addEventListener('click', () => {
+      const newInput = inputLoc({
+        id: `p${next_input}`,
+        placeHolder: "Parada..."
+      });
+
+      const newInputContainer = newInput.onAdd(my_map);
+      if (newInputContainer) {
+        sidebarContent.appendChild(newInputContainer);
+        next_input++;
+      }
+    });
+
+    sidebarContent.appendChild(button);
+  }
+
+}
+
 
