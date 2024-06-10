@@ -47,6 +47,19 @@ const InputLoc = Control.extend({
             console.error('Error: No se pudo crear el elemento input correctamente.');
         }
 
+        //Create button
+        var button_loc = document.createElement('button');
+        button_loc.type = 'button';
+        button_loc.className = 'custom-button';
+        button_loc.innerHTML = '⌖'
+        button_loc.id = `${this.options.id}_button`; 
+
+        if (button_loc) {
+            controlLoc.appendChild(button_loc);
+        } else {
+            console.error('Error: No se puede crear el elemento button correctamente.')
+        }
+
         // Avoid that clicking on the control triggers events on the map
         DomEvent.disableClickPropagation(controlLoc);
      

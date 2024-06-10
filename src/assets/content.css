@@ -86,11 +86,13 @@
 
 .custom-input {
     padding: 5px;
-    width: 250px;
+    width: 245px;
 }
 
 .custom-button {
-    margin-left: 5px;
+    font-size: 24px;
+    margin-left: 10px;
+    padding: 0px 5px;
 }
 
 .custom-control-container {
