@@ -60,6 +60,42 @@ const InputLoc = Control.extend({
             console.error('Error: No se puede crear el elemento button correctamente.')
         }
 
+
+
+        let clickHandler: (e: LeafletMouseEvent) => void;
+
+        //Add the event listener to the button
+        button_loc.addEventListener('click', () => {
+            console.log("click a botó");
+            console.log(((button_loc.id).toString()).replace('_button',''));
+            // Desactivar cualquier manejador de clics existente
+            if (clickHandler) {
+                map.off('click', clickHandler);
+            }
+            // Crear un nuevo manejador de clics
+            clickHandler = async (e: LeafletMouseEvent) => {
+                L.popup()
+                    .setLatLng(e.latlng)
+                    .setContent(`You clicked the map at ${e.latlng.toString()}`)
+                    .openOn(map);
+                const geocoder = new Geocoder( null, [e.latlng.lng, e.latlng.lat],null);
+                await geocoder.reverseGeocoding([e.latlng.lng, e.latlng.lat]);
+                const geocoderText = geocoder.getText();
+                console.log(geocoderText);
+                if (geocoderText != null) {
+                    input.value = "hola";
+                    input.value = geocoderText;
+                }
+                
+
+                // Desactivar el clic en el mapa después de un clic
+                map.off('click', clickHandler);
+            };
+            // Activar el nuevo manejador de clics
+            map.on('click', clickHandler);
+        });
+
+
         // Avoid that clicking on the control triggers events on the map
         DomEvent.disableClickPropagation(controlLoc);
      

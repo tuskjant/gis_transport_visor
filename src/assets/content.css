@@ -19,9 +19,9 @@
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s ease;
     transform: translateX(-100%);
-    z-index: 1000;
-    padding: 5px;
-    /* Asegura que el panel esté por encima del mapa */
+    z-index: 1000; /* Asegura que el panel esté por encima del mapa */
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .sidebar.open {

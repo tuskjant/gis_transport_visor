@@ -9,8 +9,8 @@ const contentHtml = (projectTitle: string, nameLastname: string) => `
     <div id="sidebar" class="sidebar">
       <div id="text-sidebar">
         <h2>Càlcul de rutes</h2>
-        <p>Cerca dues adreces per calcular una ruta. Afegeix més cercadors 
-        i adreces per obtenir una ruta tancada amb inici i final al primer punt i 
+        <p>Cerca dues adreces per calcular una ruta. Afegeix 🞧 més cercadors 
+        i adreces per obtenir una ruta tancada amb inici i final al primer punt, 
         trobant la ruta optima per recòrrer tots els punts.</p>
       </div>
       <div id="sidebar-content">

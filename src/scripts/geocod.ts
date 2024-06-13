@@ -76,7 +76,6 @@ export class Geocoder {
             console.error(error);
             return false;
         }
-        console.log(this.text)
     }
 
     //Get coordinates from response for reverse geocoding considering nearest point
