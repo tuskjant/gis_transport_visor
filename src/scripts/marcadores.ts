@@ -58,6 +58,9 @@ export class MarcadoresManager {
         // Add to map
         marcador.addTo(MarcadoresManager.map);
 
+        //Fit map bounds to markers (case 1 marker)
+        this.map.setView(marcador.getLatLng());
+
         // Update or create route
         MarcadoresManager.marcadoresPath();
 
@@ -229,9 +232,14 @@ export class MarcadoresManager {
     /**  Create route in case of 3 points: origin - destination
     */
     public static async route3points() {
-        //Delete route if exist
+        //Delete route and path if exist
         if (MarcadoresManager.routeLine != null) {
             this.map.removeLayer(MarcadoresManager.routeLine);
+        }
+        if (this.paths.length > 0) {
+            this.paths.forEach((polyline) => {
+                this.map.removeLayer(polyline)
+            })
         }
         //Coordinates of points
         const coordenadas: [number, number][] = [];

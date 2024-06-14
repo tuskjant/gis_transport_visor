@@ -3,6 +3,7 @@ import { Control, ControlPosition, DomUtil, Util, DomEvent } from 'leaflet';
 import { Geocoder } from './geocod'
 import L  from 'leaflet';
 import { MarcadoresManager } from './marcadores';
+import { latLng } from 'leaflet';
 
 
 /** Leaflet control to add an input for location
@@ -66,32 +67,38 @@ const InputLoc = Control.extend({
 
         //Add the event listener to the button
         button_loc.addEventListener('click', () => {
-            console.log("click a botó");
-            console.log(((button_loc.id).toString()).replace('_button',''));
-            // Desactivar cualquier manejador de clics existente
+            // Disable any existing click handlers
             if (clickHandler) {
                 map.off('click', clickHandler);
             }
-            // Crear un nuevo manejador de clics
+            //Pop up showing instructions
+            const mapBounds = map.getBounds().pad(-0.2);
+            console.log(mapBounds.getNorth());
+            console.log((mapBounds.getWest() + mapBounds.getEast()) / 2)
+            var latlng = [mapBounds.getNorth(), (mapBounds.getWest() + mapBounds.getEast()) / 2]
+            var popup = L.popup(latlng, { content: '<p>Clica el punt al mapa</p>' })
+                .openOn(map);
+
+            // Create a new click handler
             clickHandler = async (e: LeafletMouseEvent) => {
-                L.popup()
-                    .setLatLng(e.latlng)
-                    .setContent(`You clicked the map at ${e.latlng.toString()}`)
-                    .openOn(map);
+                //Reverse geocoding - text to input
                 const geocoder = new Geocoder( null, [e.latlng.lng, e.latlng.lat],null);
                 await geocoder.reverseGeocoding([e.latlng.lng, e.latlng.lat]);
                 const geocoderText = geocoder.getText();
-                console.log(geocoderText);
+                //Add marker
                 if (geocoderText != null) {
-                    input.value = "hola";
                     input.value = geocoderText;
+                    const marcadoresManager = new MarcadoresManager(
+                        map,
+                        geocoder
+                    );
+                    MarcadoresManager.crearMarcador(input.id, e.latlng.lat, e.latlng.lng); 
                 }
                 
-
-                // Desactivar el clic en el mapa después de un clic
+                // Disable clicking on map after one click
                 map.off('click', clickHandler);
             };
-            // Activar el nuevo manejador de clics
+            // Activate the new click handler
             map.on('click', clickHandler);
         });
 
