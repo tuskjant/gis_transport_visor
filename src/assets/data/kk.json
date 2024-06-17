@@ -1,0 +1,11 @@
+data
+: 
+crs
+: 
+{type: 'name', properties: {…}}
+features
+: 
+(3) [{…}, {…}, {…}]
+type
+: 
+"FeatureCollection"

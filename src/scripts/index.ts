@@ -4,6 +4,8 @@ import 'leaflet/dist/leaflet.css';
 import { startMapSkeleton } from './skeleton';
 import L from 'leaflet';
 import { inputLoc } from './inputLoc';
+import { Selector, Option } from './selectLoc';
+import {Geocoder} from './geocod.ts'
 
 
 //Viewer skeleton: header and footer
@@ -21,6 +23,11 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 my_map.zoomControl.remove();
 L.control.zoom({ position: 'topright' }).addTo(my_map);
 
+var kkgeocoder = new Geocoder("celo", null, null);
+//console.log(kkgeocoder.autocomplete("des"));
+
+
+
 
 // Inputs from and to
 const sidebarContent = document.getElementById('sidebar-content');
@@ -28,6 +35,8 @@ const sidebarContent = document.getElementById('sidebar-content');
 if (sidebarContent) {
   const input1 = inputLoc({ id: 'i', placeHolder: "Inici..." });
   const input2 = inputLoc({ id: 'p1', placeHolder: "Destí..." });
+
+  const select1 = new Selector('sidebar-content', my_map)
 
   const input1Container = input1.onAdd(my_map);
   const input2Container = input2.onAdd(my_map);

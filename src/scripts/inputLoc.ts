@@ -3,7 +3,8 @@ import { Control, ControlPosition, DomUtil, Util, DomEvent } from 'leaflet';
 import { Geocoder } from './geocod'
 import L  from 'leaflet';
 import { MarcadoresManager } from './marcadores';
-import { latLng } from 'leaflet';
+
+
 
 
 /** Leaflet control to add an input for location
@@ -41,6 +42,7 @@ const InputLoc = Control.extend({
         input.placeholder = this.options.placeHolder;
         input.className = 'custom-input';
         input.id = this.options.id;
+
 
         if (input) {
             controlLoc.appendChild(input);

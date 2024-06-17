@@ -51,6 +51,8 @@
     /* Asegura que el botón esté por encima del mapa y del panel */
 }
 
+
+
 .grid-container {
     display: grid;
     grid-template-rows: auto 1fr auto;/* Primera fila para el encabezado, segunda fila para el mapa, tercera fila para el pie de página */
@@ -108,7 +110,56 @@
 .fa {
     margin: 10px;
 }
+/* Estilos para el contenedor del dropdown */
+.dropdown {
+    position: absolute;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    z-index: 1000;
+}
 
+/* Estilos para cada opción del dropdown */
+.dropdown div {
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.dropdown div:last-child {
+    border-bottom: none;
+}
+
+/* Estilos para la opción seleccionada */
+.dropdown div:hover,
+.dropdown div.selected {
+    background-color: #f0f0f0;
+}
+
+/* Estilos para la opción seleccionada con teclado */
+.dropdown div:focus {
+    outline: none;
+    background-color: #e0e0e0;
+}
+
+/* Estilos específicos según el tipo de opción */
+.tipus_address {
+    color: red;
+}
+
+.tipus_topo1 {
+    color: green;
+}
+
+.tipus_topo2 {
+    color: blue;
+}
 
 
 
