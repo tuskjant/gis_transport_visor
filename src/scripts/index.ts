@@ -1,11 +1,13 @@
 import '../assets/content.css'
 import '../assets/leaflet_awesome_number_markers.css'
 import 'leaflet/dist/leaflet.css';
-import { startMapSkeleton } from './skeleton';
+import { startMapSkeleton } from './_Skeleton.ts';
 import L from 'leaflet';
 import { inputLoc } from './inputLoc';
 import { Selector, Option } from './selectLoc';
-import {Geocoder} from './geocod.ts'
+//import { Geocoder } from './geocod.ts'
+import { Geocoder } from './_GeocoderService.ts';
+import { GeocoderComponent } from './_GeocoderComponent.ts';
 
 
 //Viewer skeleton: header and footer
@@ -23,10 +25,9 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 my_map.zoomControl.remove();
 L.control.zoom({ position: 'topright' }).addTo(my_map);
 
-var kkgeocoder = new Geocoder("celo", null, null);
+//var kkgeocoder = new Geocoder();
+//console.log(kkgeocoder.autocomplete("campins", [2.4939400649245127, 41.689904567152034]));
 //console.log(kkgeocoder.autocomplete("des"));
-
-
 
 
 // Inputs from and to
@@ -36,7 +37,8 @@ if (sidebarContent) {
   const input1 = inputLoc({ id: 'i', placeHolder: "Inici..." });
   const input2 = inputLoc({ id: 'p1', placeHolder: "Destí..." });
 
-  const select1 = new Selector('sidebar-content', my_map)
+  //const select1 = new Selector('1', 'sidebar-content')
+  const select2 = new GeocoderComponent('1', 'sidebar-content');
 
   const input1Container = input1.onAdd(my_map);
   const input2Container = input2.onAdd(my_map);
