@@ -18,12 +18,13 @@ export class Geocoder {
     readonly layers: string = "address,topo1,topo2";
     readonly size: string = "1";
     readonly autocompleteSize: string = "5";
+    readonly errorPoint: geocodedPoint[] = [{ textAddress: "No s'ha localitza cap adreça", coordinates: [0, 0] as [number, number], addressType: "error" }];
 
 
     //Forward geocoding
-    public async forwardGeocoding(textAddress: string, focus:[number, number] | null): Promise<geocodedPoint[]> {
+    public async forwardGeocoding(textAddress: string, focus: [number, number] | null): Promise<geocodedPoint[]> {
         if (textAddress === null || textAddress.length < 3) {
-            return;
+            return this.errorPoint;
         }
         var urlQuery: string = `text=${encodeURIComponent(textAddress)}&layers=${this.layers}&size=${this.size}`;
         if (focus !== null) {
@@ -35,9 +36,8 @@ export class Geocoder {
             const response = await axios.get(url);
             return this.getGeocodedPoint(response.data);
         } catch (error) {
-            console.error(error);
-            const errorPoint = [{ textAddress: "Sense adreça", coordinates: [0, 0] as [number, number], addressType: "error" }];
-            return errorPoint;
+            console.error(error);    
+            return this.errorPoint;
         }
     }
 
@@ -50,8 +50,7 @@ export class Geocoder {
             return this.getGeocodedPoint(response.data);
         } catch (error) {
             console.error(error);
-            const errorPoint = [{ textAddress: "Sense adreça", coordinates: [0, 0] as [number, number], addressType: "error" }];
-            return errorPoint;
+            return this.errorPoint;
         }
     }
 
@@ -69,8 +68,7 @@ export class Geocoder {
             return this.getGeocodedPoint(response.data);
         } catch (error) {
             console.error(error);
-            const errorPoint = [{ textAddress: "Sense adreça", coordinates: [0, 0] as [number, number], addressType: "error" }];
-            return errorPoint;
+            return this.errorPoint;
         }
     }
 

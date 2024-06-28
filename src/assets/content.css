@@ -51,6 +51,21 @@
     /* Asegura que el botón esté por encima del mapa y del panel */
 }
 
+#sidebar-content {
+    display: flex;
+    flex-direction: column;
+}
+
+#geocod-component-container {
+    display: flex;
+    flex-direction: row;
+}
+
+#addInput{
+    width: 40px;
+    flex-shrink: 0;
+}
+
 
 
 .grid-container {
@@ -94,7 +109,7 @@
 .custom-button {
     font-size: 24px;
     margin-left: 10px;
-    padding: 0px 5px;
+    padding: 0px 05px;
 }
 
 .custom-control-container {
@@ -113,8 +128,7 @@
 /* Estilos para el contenedor del dropdown */
 .dropdown {
     position: absolute;
-    width: 100%;
-    border: 1px solid #ccc;
+    width: 95%;
     border-top: none;
     border-radius: 0 0 4px 4px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -161,5 +175,27 @@
     color: blue;
 }
 
+.type-style {
+    font-style: italic;
+    color: black;
+}
 
+#geocod-component-container{
+    margin-top: 10px;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+    border-radius: 4px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+#originDestCheckBox {
+    margin-right: 10px;
+}
 

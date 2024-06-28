@@ -6,14 +6,19 @@ interface Option {
 
 import { fetchOptions } from './fetchoptions';
 
-
+/**
+ * Component to search directions using ICGC Geocoder autocomplete function
+ * Select direction from options
+ */
 class Selector {
+    private id: string;
     private container: HTMLElement;
     private input: HTMLInputElement;
     private dropdown: HTMLElement;
     private timeoutId: number | undefined;
 
-    constructor(containerId: string) {
+    constructor(selectorId: string, containerId: string) {
+        this.id = selectorId;
         this.container = document.getElementById(containerId) as HTMLElement;
         this.input = document.createElement('input');
         this.dropdown = document.createElement('div');
@@ -55,8 +60,7 @@ class Selector {
             optionElement.textContent = option.label;
             optionElement.classList.add('dropdown-option', `tipus_${option.type}`);
             optionElement.addEventListener('click', () => {
-                this.onOptionSelected(option);
-                
+                this.onOptionSelected(option);   
             });
             this.dropdown.appendChild(optionElement);
         });
