@@ -1,10 +1,13 @@
 import L from 'leaflet';
 import { AwesomeNumberMarkers, AwesomeNumberMarkerOptions } from "./leafletAwesomeNumberMarkers";
+import { LeafletMouseEvent } from 'leaflet';
 
 
 export class LeafletRouteController {
     private map: L.Map;
     private marcadores: { [id: string]: L.Marker } = {};
+    
+    private clickHandler: ((e: LeafletMouseEvent) => void ) | null = null;
 
     constructor(map: L.map) {
         this.map = map;
@@ -52,7 +55,18 @@ export class LeafletRouteController {
     }
 
     enableRoutePointInput() {
-        
+        console.log("hem arribat a enableroutepointinnput");
+        // Disable any existing click handlers
+        if (this.clickHandler) {
+            this.map.off('click', this.clickHandler);
+        }
+        this.clickHandler = (e: LeafletMouseEvent) => {
+            console.log("clicado mapa");
+            console.log(e.latlng.lng);
+            // Disable clicking on map after one click
+            this.map.off('click', this.clickHandler);
+        }
+        this.map.on('click', this.clickHandler);
     }
 
     disableRoutePointInput() {

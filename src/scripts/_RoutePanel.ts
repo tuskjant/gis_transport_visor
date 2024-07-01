@@ -29,11 +29,11 @@ export class RoutePanel {
         if (sidebarContainer) {
             const input1 = new GeocoderComponent("i", this.idContainer, "inici...", this.map);
             input1.getElement().addEventListener('addressSelected', this.addressReturned.bind(this));
-            const input2 = new GeocoderComponent("1", this.idContainer, "final...", this.map);
+            const input2 = new GeocoderComponent("f", this.idContainer, "final...", this.map);
             input2.getElement().addEventListener('addressSelected', this.addressReturned.bind(this));
 
             // Counter for inputs (case TSP)
-            let next_input: number = 2;
+            let next_input: number = 1;
 
             // Button to add more inputs (case TSP)
             const button = document.createElement('button');
@@ -94,7 +94,17 @@ export class RoutePanel {
         if (event instanceof CustomEvent) {
             console.log(event.detail);
             const coordinates = event.detail.point.coordinates;
-            this.controller.updateRoutePoint('1', "prova", [coordinates[1], coordinates[0]]);
+            const pointId = event.detail.pointId;
+            var pointType: string = "";
+            switch (pointId) {
+                case 'i':
+                    pointType = "inici";
+                case 'f':
+                    pointType = "final";
+                default:
+                    pointType = "punt de pas";
+            }
+            this.controller.updateRoutePoint(pointId, pointType, [coordinates[1], coordinates[0]]);
         }    
     }
 }

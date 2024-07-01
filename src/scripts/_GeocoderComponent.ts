@@ -1,4 +1,5 @@
 import { geocodedPoint, Geocoder } from './_GeocoderService';
+import { LeafletRouteController } from "./_LeafletRouteController";
 
 /**
  * S’encarregarà d’agafar l’input de l’usuari i resoldre-ho a una adreça amb unes coordenades.: Selector
@@ -22,8 +23,10 @@ export class GeocoderComponent implements RoutePointMapInputListener{
     private placeholder: string;
     private map: L.map;
     private option: geocodedPoint | null = null;
+    private controller: LeafletRouteController;
 
     private input: HTMLInputElement;
+    private button_loc: HTMLButtonElement;
     private dropdown: HTMLElement;
     private timeoutId: number | undefined;
     readonly timeout:number = 3000; 
@@ -33,6 +36,7 @@ export class GeocoderComponent implements RoutePointMapInputListener{
         this.container = document.getElementById(containerId) as HTMLElement;
         this.placeholder = placeholder;
         this.map = map;
+        this.controller = new LeafletRouteController(this.map);
         
         const geoComponent = document.createElement('div');
         geoComponent.id = 'geocod-component-container';
@@ -45,18 +49,19 @@ export class GeocoderComponent implements RoutePointMapInputListener{
         this.dropdown.classList.add('dropdown');
 
         //Create button
-        const button_loc = document.createElement('button');
-        button_loc.type = 'button';
-        button_loc.className = 'custom-button';
-        button_loc.innerHTML = '⌖'
-        button_loc.id = `${this.id}_button`;
+        this.button_loc = document.createElement('button');
+        this.button_loc.type = 'button';
+        this.button_loc.className = 'custom-button';
+        this.button_loc.innerHTML = '⌖'
+        this.button_loc.id = `${this.id}_button`;
 
         this.container.appendChild(geoComponent);
         geoComponent.appendChild(this.input);
         geoComponent.appendChild(this.dropdown);
-        geoComponent.appendChild(button_loc);
+        geoComponent.appendChild(this.button_loc);
 
         this.input.addEventListener('input', this.onInputChange.bind(this));
+        this.button_loc.addEventListener('click', this.controller.enableRoutePointInput.bind(this));
     }
 
     getElement(): HTMLInputElement{
