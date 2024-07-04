@@ -1,20 +1,22 @@
 import L from 'leaflet';
 import { AwesomeNumberMarkers, AwesomeNumberMarkerOptions } from "./leafletAwesomeNumberMarkers";
-import { LeafletMouseEvent } from 'leaflet';
+import { EventEmitter } from './EventEmitter';
 
 
-export class LeafletRouteController {
+
+
+export class LeafletRouteController extends EventEmitter{
     private map: L.Map;
     private marcadores: { [id: string]: L.Marker } = {};
     
-    private clickHandler: ((e: LeafletMouseEvent) => void ) | null = null;
 
-    constructor(map: L.map) {
+    constructor(map: L.Map) {
+        super();
         this.map = map;
     }
 
     //Create or update route point
-    updateRoutePoint(routePointId: string, type:string, location: [number, number]) {
+    public updateRoutePoint(routePointId: string, type:string, location: [number, number]) {
         if (this.marcadores[routePointId] != null) {
             this.deleteRoutePoint(routePointId);
         }
@@ -33,14 +35,25 @@ export class LeafletRouteController {
             icon: awesomeNumberMarkerIcon,
         });
 
+        //Add to list of markers
         this.marcadores[routePointId] = marcador;
-
+        //Add to map
         marcador.addTo(this.map);
 
+        // Event handle dblclick -> emit event markerDblclick
+        marcador.on('dblclick', () => {
+            this.emit('markerDblclick');
+        });
+        
+        // Event handle moveend -> emit event markerMove
+        marcador.on('moveend', () => {
+            this.emit('markerMove');
+        });
     }
 
+
     // Delete route point by id
-    deleteRoutePoint(routePointId: string) {
+    private deleteRoutePoint(routePointId: string) {
         // Check if marker exist
         if (this.marcadores[routePointId]) {
             // Remove from map
@@ -54,27 +67,25 @@ export class LeafletRouteController {
         
     }
 
-    enableRoutePointInput() {
-        console.log("hem arribat a enableroutepointinnput");
-        // Disable any existing click handlers
-        if (this.clickHandler) {
-            this.map.off('click', this.clickHandler);
-        }
-        this.clickHandler = (e: LeafletMouseEvent) => {
-            console.log("clicado mapa");
-            console.log(e.latlng.lng);
-            // Disable clicking on map after one click
-            this.map.off('click', this.clickHandler);
-        }
-        this.map.on('click', this.clickHandler);
+    //Enable route point input
+    public useMapPointInput(callback: (clickedPoint: [number, number]) => void) {
+        const clickHandler = (e: L.LeafletMouseEvent) => {
+            const { lat, lng } = e.latlng;
+            callback([lat, lng]);
+            this.map.off('click', clickHandler);
+        };
+
+        this.map.on('click', clickHandler);
     }
 
-    disableRoutePointInput() {
-        
-    }
 
     onRoutePointInput(routePointId: string, callback) {
         
+    }
+
+    getMapCenter(): [number, number] {
+        var center: [number, number] = ([this.map.getCenter().lng, this.map.getCenter().lat]);  //focus in center map
+        return center;
     }
 
 

@@ -9,10 +9,12 @@ import { Selector, Option } from './selectLoc';
 import { Geocoder } from './_GeocoderService.ts';
 import { GeocoderComponent } from './_GeocoderComponent.ts';
 import { RoutePanel } from './_RoutePanel.ts';
+import { my_map } from './_Map.ts';
 
 
 //Viewer skeleton: header and footer
 startMapSkeleton(document);
+
 
 //Map - centered at Sant Celoni
 const my_map = new L.Map("map").setView([41.689165, 2.491243], 15);
@@ -25,6 +27,10 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // Zoom control topright
 my_map.zoomControl.remove();
 L.control.zoom({ position: 'topright' }).addTo(my_map);
+
+
+//const map = my_map;
+
 
 const routePanel = new RoutePanel('sidebar-content', my_map);
 

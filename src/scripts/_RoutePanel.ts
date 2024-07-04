@@ -1,5 +1,4 @@
 import { GeocoderComponent } from "./_GeocoderComponent";
-import L from 'leaflet';
 import { LeafletRouteController } from "./_LeafletRouteController";
 
 
@@ -15,33 +14,42 @@ import { LeafletRouteController } from "./_LeafletRouteController";
 
 export class RoutePanel {
     private idContainer: string;
-    private map: L.map;
+    private map: L.Map;
     private controller: LeafletRouteController;
 
 
 
-    constructor(idContainer: string, map: L.map) {
+    constructor(idContainer: string, map: L.Map) {
         this.idContainer = idContainer;
         this.map = map;
         this.controller = new LeafletRouteController(this.map);
 
         const sidebarContainer = document.getElementById(idContainer);
         if (sidebarContainer) {
+            // Button to calculate routes
+            const buttonCalculateRoute = document.createElement('button');
+            buttonCalculateRoute.className = 'button-calculate-route';
+            buttonCalculateRoute.innerHTML = '<p class="fa">Route</p>';
+            buttonCalculateRoute.title = "Calculate route";
+            buttonCalculateRoute.style.cursor = 'pointer';
+
+            sidebarContainer.appendChild(buttonCalculateRoute);
+
             const input1 = new GeocoderComponent("i", this.idContainer, "inici...", this.map);
-            input1.getElement().addEventListener('addressSelected', this.addressReturned.bind(this));
+            input1.getElement().addEventListener('addressSelected', this.onAddressReturned.bind(this));
             const input2 = new GeocoderComponent("f", this.idContainer, "final...", this.map);
-            input2.getElement().addEventListener('addressSelected', this.addressReturned.bind(this));
+            input2.getElement().addEventListener('addressSelected', this.onAddressReturned.bind(this));
 
             // Counter for inputs (case TSP)
             let next_input: number = 1;
 
             // Button to add more inputs (case TSP)
-            const button = document.createElement('button');
-            button.className = 'leaflet-bar leaflet-control';
-            button.id = 'addInput';
-            button.innerHTML = '<p class="fa">🞧</p>';
-            button.title = "Travel Salesman Problem";
-            button.style.cursor = 'pointer';
+            const buttonAddInput = document.createElement('button');
+            buttonAddInput.className = 'leaflet-bar leaflet-control';
+            buttonAddInput.id = 'addInput';
+            buttonAddInput.innerHTML = '<p class="fa">🞧</p>';
+            buttonAddInput.title = "Travel Salesman Problem";
+            buttonAddInput.style.cursor = 'pointer';
 
 
             // Checkbox to set destination = origin
@@ -61,9 +69,9 @@ export class RoutePanel {
 
 
             // Add more inputs button eventlistener
-            button.addEventListener('click', () => {
+            buttonAddInput.addEventListener('click', () => {
                 const newInput = new GeocoderComponent(`p${next_input}`, this.idContainer, `parada - ${next_input}...`, this.map);
-                newInput.getElement().addEventListener('addressSelected', this.addressReturned.bind(this));
+                newInput.getElement().addEventListener('addressSelected', this.onAddressReturned.bind(this));
                 next_input++;
             });
 
@@ -74,7 +82,7 @@ export class RoutePanel {
                     //checked origin = destination
                     var option1 = input1.getOption();
                     if (option1 != null) {
-                        input2.setOption(option1);
+                        input2.onOptionSelected(option1);
                     } else {
                         checkOriginDest.checked = false;
                     }
@@ -83,28 +91,36 @@ export class RoutePanel {
 
            
             sidebarContainer.appendChild(checkboxContainer);
-            sidebarContainer.appendChild(button);
+            sidebarContainer.appendChild(buttonAddInput);
 
         }
 
     }
 
     // When an address is selected
-    private addressReturned(event: Event): void {
+    private onAddressReturned(event: Event): void {
         if (event instanceof CustomEvent) {
-            console.log(event.detail);
             const coordinates = event.detail.point.coordinates;
             const pointId = event.detail.pointId;
             var pointType: string = "";
             switch (pointId) {
                 case 'i':
                     pointType = "inici";
+                    break;
                 case 'f':
                     pointType = "final";
+                    break;
                 default:
                     pointType = "punt de pas";
             }
             this.controller.updateRoutePoint(pointId, pointType, [coordinates[1], coordinates[0]]);
+            this.controller.on('markerDblclick', () => {
+                console.log("doubleclick");
+            });
+            this.controller.on('markerMove', () => {
+                
+            });
+
         }    
     }
 }

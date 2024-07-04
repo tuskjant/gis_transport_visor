@@ -16,6 +16,7 @@ export class Geocoder {
     readonly RVS_URL: string = "/geocodificador/invers";
     readonly ACP_URL: string = "/geocodificador/autocompletar";
     readonly layers: string = "address,topo1,topo2";
+    readonly layerReverse: string = "address";
     readonly size: string = "1";
     readonly autocompleteSize: string = "5";
     readonly errorPoint: geocodedPoint[] = [{ textAddress: "No s'ha localitza cap adreça", coordinates: [0, 0] as [number, number], addressType: "error" }];
@@ -43,7 +44,7 @@ export class Geocoder {
 
     //Reverse geocoding
     public async reverseGeocoding(coords: [number, number]): Promise<geocodedPoint[]> {
-        const urlQuery: string = `lat=${coords[1]}&lon=${coords[0]}&layers=${this.layers}&size=${this.size}`;
+        const urlQuery: string = `lat=${coords[1]}&lon=${coords[0]}&layers=${this.layerReverse}&size=${this.size}`;
         const url: string = this.BASE_URL + this.RVS_URL + '?' + urlQuery;
         try {
             const response = await axios.get(url);
