@@ -9,7 +9,7 @@ import { Selector, Option } from './selectLoc';
 import { Geocoder } from './_GeocoderService.ts';
 import { GeocoderComponent } from './_GeocoderComponent.ts';
 import { RoutePanel } from './_RoutePanel.ts';
-import { my_map } from './_Map.ts';
+//import { my_map } from './_Map.ts';
 
 
 //Viewer skeleton: header and footer

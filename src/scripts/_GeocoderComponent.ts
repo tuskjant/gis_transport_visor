@@ -1,23 +1,14 @@
-import { geocodedPoint, Geocoder } from './_GeocoderService';
+import { Geocoder } from './_GeocoderService';
 import { LeafletRouteController } from "./_LeafletRouteController";
+import { geocodedPoint, markerPoint } from './interfaces';
 
 /**
  * S’encarregarà d’agafar l’input de l’usuari i resoldre-ho a una adreça amb unes coordenades.: Selector
  * Botó que permetrà capturar la coordenada fent click sobre el mapa.
  */
 
-interface RoutePointMapInputListener {
-    onRoutePointMapInput(event: Event): void;
-    getRoutePointId(): string;
-    getRoutePointType(): string;
-}
 
-export interface markerPoint {
-    pointId: string,
-    point: geocodedPoint
-}
-
-export class GeocoderComponent implements RoutePointMapInputListener{
+export class GeocoderComponent{
     private id: string;
     private container: HTMLElement;
     private placeholder: string;
@@ -72,13 +63,6 @@ export class GeocoderComponent implements RoutePointMapInputListener{
         return this.option;
     }
 
-    public getRoutePointId = () => {
-        return "hola";
-    }
-
-    public getRoutePointType = () => {
-        return "hola";
-    }
 
     // When text input change, look for options
     private async onInputChange(event: Event): Promise<void> {
@@ -137,12 +121,13 @@ export class GeocoderComponent implements RoutePointMapInputListener{
         this.clearDropdown();
         var markerPoint: markerPoint = {
             pointId: this.id,
+            pointType: 'undefined',
             point: option
         };
         const inputEvent = new CustomEvent('addressSelected', {
             detail: markerPoint,
         }) 
-        this.input.dispatchEvent(inputEvent);
+        this.input.dispatchEvent(inputEvent); 
     }
 
 
@@ -151,6 +136,11 @@ export class GeocoderComponent implements RoutePointMapInputListener{
         while (this.dropdown.firstChild) {
             this.dropdown.removeChild(this.dropdown.firstChild);
         }
+    }
+
+    // Clear input value text
+    public clearInput(): void {
+        this.input.value = '';
     }
 
     // Fetch options from geocoder service by text. Autocomplete option
@@ -168,7 +158,6 @@ export class GeocoderComponent implements RoutePointMapInputListener{
         return result;
     }
 
-
     //When selecting a point in the map
     public onRoutePointMapInput(): void {
         this.controller.useMapPointInput(async (clickedPoint: [number, number]) => {
@@ -179,6 +168,14 @@ export class GeocoderComponent implements RoutePointMapInputListener{
         });
     }
 
+    //Update text from new coordinates
+    public async updateInput (newPoint: markerPoint) {
+        var newGeocodedPoint = (await this.fetchGeocoderOptionsReverse(newPoint.point.coordinates))[0];
+        console.log(newGeocodedPoint);
+        var newMarkerPoint = newPoint;
+        newMarkerPoint.point = newGeocodedPoint;
+        this.input.value = newMarkerPoint.point.textAddress;
+    }
 
 
 }

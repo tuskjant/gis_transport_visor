@@ -1,8 +1,7 @@
 import L from 'leaflet';
 import { AwesomeNumberMarkers, AwesomeNumberMarkerOptions } from "./leafletAwesomeNumberMarkers";
 import { EventEmitter } from './EventEmitter';
-
-
+import {markerPoint} from './interfaces'
 
 
 export class LeafletRouteController extends EventEmitter{
@@ -16,7 +15,8 @@ export class LeafletRouteController extends EventEmitter{
     }
 
     //Create or update route point
-    public updateRoutePoint(routePointId: string, type:string, location: [number, number]) {
+    public updateRoutePoint(routePoint: markerPoint) {
+        const routePointId = routePoint.pointId;
         if (this.marcadores[routePointId] != null) {
             this.deleteRoutePoint(routePointId);
         }
@@ -29,7 +29,7 @@ export class LeafletRouteController extends EventEmitter{
             number: routePointId,
         } as AwesomeNumberMarkerOptions);
 
-        const marcador = L.marker([location[0], location[1]], {
+        const marcador = L.marker([routePoint.point.coordinates[1], routePoint.point.coordinates[0]], {
             draggable: true,
             title: `Marcador ${routePointId}`,
             icon: awesomeNumberMarkerIcon,
@@ -42,12 +42,18 @@ export class LeafletRouteController extends EventEmitter{
 
         // Event handle dblclick -> emit event markerDblclick
         marcador.on('dblclick', () => {
-            this.emit('markerDblclick');
+            this.deleteRoutePoint(routePointId);
+            this.emit('markerDblclick', routePoint);
         });
         
         // Event handle moveend -> emit event markerMove
         marcador.on('moveend', () => {
-            this.emit('markerMove');
+            console.log(marcador.getLatLng().lng),
+            console.log(marcador.getLatLng().lat);
+            var newRoutePoint = routePoint;
+            newRoutePoint.point.coordinates[0] = marcador.getLatLng().lng;
+            newRoutePoint.point.coordinates[1] = marcador.getLatLng().lat;
+            this.emit('markerMove', newRoutePoint);
         });
     }
 

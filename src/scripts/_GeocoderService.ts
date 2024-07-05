@@ -1,14 +1,12 @@
 import axios from 'axios';
+import { geocodedPoint } from './interfaces';
+
 /**
  * Classe per obtenir a partir d’una entrada de text una llista de resultats candidats a adreces
  * mitjançant una crida a l’API de l’ICGC.
  */
 
-export interface geocodedPoint {
-    textAddress: string;
-    coordinates: [number, number]; //long, lat
-    addressType: string;
-}
+
 
 export class Geocoder {
     readonly BASE_URL: string = "https://eines.icgc.cat";
