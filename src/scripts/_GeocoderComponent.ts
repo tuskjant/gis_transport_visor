@@ -1,6 +1,6 @@
 import { Geocoder } from './_GeocoderService';
 import { LeafletRouteController } from "./_LeafletRouteController";
-import { geocodedPoint, markerPoint } from './interfaces';
+import { GeocodedPoint, MarkerPoint } from './interfaces';
 
 /**
  * S’encarregarà d’agafar l’input de l’usuari i resoldre-ho a una adreça amb unes coordenades.: Selector
@@ -13,9 +13,10 @@ export class GeocoderComponent{
     private container: HTMLElement;
     private placeholder: string;
     private map: L.Map;
-    private option: geocodedPoint | null = null;
+    private option: GeocodedPoint | null = null;
     private controller: LeafletRouteController;
 
+    private idlabel: HTMLDivElement;
     private input: HTMLInputElement;
     private button_loc: HTMLButtonElement;
     private dropdown: HTMLElement;
@@ -32,6 +33,11 @@ export class GeocoderComponent{
         const geoComponent = document.createElement('div');
         geoComponent.id = 'geocod-component-container';
 
+        this.idlabel = document.createElement('div');
+        this.idlabel.className = 'id-label';
+        this.idlabel.id = `${this.id}_label`;
+        this.idlabel.innerHTML = `<h4>${this.id} </h4>`;
+
         this.input = document.createElement('input');
         this.input.id = `${this.id}_input`
         this.input.className = 'custom-input';
@@ -47,6 +53,7 @@ export class GeocoderComponent{
         this.button_loc.id = `${this.id}_button`;
 
         this.container.appendChild(geoComponent);
+        geoComponent.appendChild(this.idlabel);
         geoComponent.appendChild(this.input);
         geoComponent.appendChild(this.dropdown);
         geoComponent.appendChild(this.button_loc);
@@ -59,7 +66,7 @@ export class GeocoderComponent{
         return this.input;
     }
 
-    public getOption(): geocodedPoint | null {
+    public getOption(): GeocodedPoint | null {
         return this.option;
     }
 
@@ -89,7 +96,7 @@ export class GeocoderComponent{
     }
 
     // Update dropdown list
-    private updateDropdown(options: geocodedPoint[]): void {
+    private updateDropdown(options: GeocodedPoint[]): void {
         this.clearDropdown();
         options.forEach(option => {
             const optionElement = document.createElement('div');
@@ -115,11 +122,11 @@ export class GeocoderComponent{
     }
 
     //When selecting an option, dispatch event containing the option selected
-    public onOptionSelected(option: geocodedPoint): void {
+    public onOptionSelected(option: GeocodedPoint): void {
         this.input.value = option.textAddress;
         this.option = option;
         this.clearDropdown();
-        var markerPoint: markerPoint = {
+        var markerPoint: MarkerPoint = {
             pointId: this.id,
             pointType: 'undefined',
             point: option
@@ -144,7 +151,7 @@ export class GeocoderComponent{
     }
 
     // Fetch options from geocoder service by text. Autocomplete option
-    private async fetchGeocoderOptions(textToSearch: string): Promise<geocodedPoint[]> {
+    private async fetchGeocoderOptions(textToSearch: string): Promise<GeocodedPoint[]> {
         const geocoder = new Geocoder();
         var center = this.controller.getMapCenter();
         const result = await geocoder.autocomplete(textToSearch, center);
@@ -152,7 +159,7 @@ export class GeocoderComponent{
     }
 
     // Fetch options from geocoder service by coordinates. Reverse geocoding option
-    private async fetchGeocoderOptionsReverse(coords: [number, number]): Promise<geocodedPoint[]> {
+    private async fetchGeocoderOptionsReverse(coords: [number, number]): Promise<GeocodedPoint[]> {
         const geocoder = new Geocoder();
         const result = await geocoder.reverseGeocoding(coords);
         return result;
@@ -169,7 +176,7 @@ export class GeocoderComponent{
     }
 
     //Update text from new coordinates
-    public async updateInput (newPoint: markerPoint) {
+    public async updateInput (newPoint: MarkerPoint) {
         var newGeocodedPoint = (await this.fetchGeocoderOptionsReverse(newPoint.point.coordinates))[0];
         console.log(newGeocodedPoint);
         var newMarkerPoint = newPoint;

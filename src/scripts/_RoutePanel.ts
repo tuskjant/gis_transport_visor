@@ -1,6 +1,7 @@
 import { GeocoderComponent } from "./_GeocoderComponent";
 import { LeafletRouteController } from "./_LeafletRouteController";
-import { markerPoint } from "./interfaces";
+import { MarkerPoint} from "./interfaces";
+import { Routing } from "./_RouteService";
 
 
 
@@ -18,6 +19,7 @@ export class RoutePanel {
     private map: L.Map;
     private controller: LeafletRouteController;
     private inputs: { [id_input: string]: GeocoderComponent } = {};
+    private routePoints: { [pointId: string]: MarkerPoint } = {};
 
 
 
@@ -27,6 +29,7 @@ export class RoutePanel {
         this.controller = new LeafletRouteController(this.map);
         this.controller.on('markerDblclick', this.onMarkerDblClick.bind(this));
         this.controller.on('markerMove', this.onMarkerMove.bind(this));
+        this.controller.on('updatedRoutePoint', this.onUpdatedRoutePoint.bind(this));
 
 
         const sidebarContainer = document.getElementById(idContainer);
@@ -39,13 +42,15 @@ export class RoutePanel {
     private setupUI(sidebarContainer: HTMLElement): void {
 
         // Button to calculate routes
+        /*
         const buttonCalculateRoute = document.createElement('button');
         buttonCalculateRoute.className = 'button-calculate-route';
         buttonCalculateRoute.innerHTML = '<p class="fa">Route</p>';
         buttonCalculateRoute.title = "Calculate route";
         buttonCalculateRoute.style.cursor = 'pointer';
-
+        
         sidebarContainer.appendChild(buttonCalculateRoute);
+        */
 
         const input1 = new GeocoderComponent("i", this.idContainer, "inici...", this.map);
         input1.getElement().addEventListener('addressSelected', this.onAddressReturned.bind(this));
@@ -59,11 +64,9 @@ export class RoutePanel {
 
         // Button to add more inputs (case TSP)
         const buttonAddInput = document.createElement('button');
-        buttonAddInput.className = 'leaflet-bar leaflet-control';
         buttonAddInput.id = 'addInput';
-        buttonAddInput.innerHTML = '<p class="fa">🞧</p>';
+        buttonAddInput.innerHTML = '<p class="fa">&#10010;</p>';
         buttonAddInput.title = "Travel Salesman Problem";
-        buttonAddInput.style.cursor = 'pointer';
 
 
         // Checkbox to set destination = origin
@@ -76,7 +79,7 @@ export class RoutePanel {
 
         const label = document.createElement('label');
         label.htmlFor = 'originDestCheckBox';
-        label.innerText = 'Ruta tancada. Inici igual a final'
+        label.innerText = 'Inici igual a final. Ruta circular'
 
         checkboxContainer.appendChild(checkOriginDest);
         checkboxContainer.appendChild(label);
@@ -130,20 +133,62 @@ export class RoutePanel {
                 point: event.detail.point
             }
             this.controller.updateRoutePoint(markerPoint);
+
         }    
     }
 
-    // When double click on a marker
-    private onMarkerDblClick(routePoint: markerPoint): void {
-        console.log(`doubleclick ${routePoint.pointId}`);
+    // When double click on a marker delete marker and clear input
+    private onMarkerDblClick(routePoint: MarkerPoint): void {
         this.inputs[routePoint.pointId].clearInput();
+        this.calculateRoute();
     }
 
-    // When moving a marker
-    private onMarkerMove(routePoint: markerPoint): void {
+    // When moving a marker update input text with using new coordinates
+    private onMarkerMove(routePoint: MarkerPoint): void {
         // Point with new Coordinates requires new reverse geocoding
         this.inputs[routePoint.pointId].updateInput(routePoint);
+        this.calculateRoute();
     }
 
+
+    private onUpdatedRoutePoint(newRoutePoint: MarkerPoint): void {
+        //update route points list  
+        if (newRoutePoint.pointId in this.routePoints) {
+            delete this.routePoints[newRoutePoint.pointId];
+        }
+        this.routePoints[newRoutePoint.pointId] = newRoutePoint;
+        this.calculateRoute();
+            
+    }
+
+    private calculateRoute(): void{
+        const numberRoutePoints = Object.keys(this.routePoints).length;
+        if (numberRoutePoints == 2) {
+            this.calculateRoute2Points();
+        } else if (numberRoutePoints > 2) {
+            this.calculateRouteTSP();
+        } 
+    }
+
+    private async calculateRoute2Points(): Promise<void> {
+        //Get coordinates of points
+        var routePointCoordinates: [number, number][] = [];
+        Object.values(this.routePoints).forEach(markerPoint => {
+            routePointCoordinates.push(markerPoint.point.coordinates);
+        })
+        //Get the route geometry using Routing class
+        const routing = new Routing(routePointCoordinates[0], routePointCoordinates[1]);
+        await routing.getRoute();
+        const routeGeometry = routing.getGeometry();
+        this.controller.updateRoute(routeGeometry);
+
+
+    }
+
+    private async calculateRouteTSP(): Promise<void> {
+
+    }
    
+
+
 }
