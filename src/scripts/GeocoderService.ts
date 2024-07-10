@@ -1,14 +1,14 @@
 import axios from 'axios';
-import { geocodedPoint } from './interfaces';
+import { GeocodedPoint, GeocodingService } from './interfaces';
 
-/**
- * Classe per obtenir a partir d’una entrada de text una llista de resultats candidats a adreces
- * mitjançant una crida a l’API de l’ICGC.
- */
+/** 
+ *  Class Geocoder for forward, reverse and autocomplete geocoding
+* Utilize the geocoder from ICGC: https://eines.icgc.cat
+*/
 
 
 
-export class Geocoder {
+export class Geocoder implements GeocodingService{
     readonly BASE_URL: string = "https://eines.icgc.cat";
     readonly FWD_URL: string = "/geocodificador/cerca";
     readonly RVS_URL: string = "/geocodificador/invers";
@@ -17,11 +17,11 @@ export class Geocoder {
     readonly layerReverse: string = "address";
     readonly size: string = "1";
     readonly autocompleteSize: string = "5";
-    readonly errorPoint: geocodedPoint[] = [{ textAddress: "No s'ha localitza cap adreça", coordinates: [0, 0] as [number, number], addressType: "error" }];
+    readonly errorPoint: GeocodedPoint[] = [{ textAddress: "No s'ha localitza cap adreça", coordinates: [0, 0] as [number, number], addressType: "error" }];
 
 
     //Forward geocoding
-    public async forwardGeocoding(textAddress: string, focus: [number, number] | null): Promise<geocodedPoint[]> {
+    public async forwardGeocoding(textAddress: string, focus: [number, number] | null): Promise<GeocodedPoint[]> {
         if (textAddress === null || textAddress.length < 3) {
             return this.errorPoint;
         }
@@ -41,7 +41,7 @@ export class Geocoder {
     }
 
     //Reverse geocoding
-    public async reverseGeocoding(coords: [number, number]): Promise<geocodedPoint[]> {
+    public async reverseGeocoding(coords: [number, number]): Promise<GeocodedPoint[]> {
         const urlQuery: string = `lat=${coords[1]}&lon=${coords[0]}&layers=${this.layerReverse}&size=${this.size}`;
         const url: string = this.BASE_URL + this.RVS_URL + '?' + urlQuery;
         try {
@@ -54,7 +54,7 @@ export class Geocoder {
     }
 
     //Autocomplete forward geocoding
-    public async autocomplete(text: string, focus: [number, number] | null): Promise<geocodedPoint[]> {
+    public async autocomplete(text: string, focus: [number, number] | null): Promise<GeocodedPoint[]> {
         var urlQuery: string = `text=${encodeURIComponent(text)}&layers=${this.layers}&size=${this.autocompleteSize}`;
         if (focus !== null) {
             urlQuery += `&focus.point.lat=${focus[1]}&focus.point.lon=${focus[0]}`;
@@ -73,10 +73,10 @@ export class Geocoder {
 
 
     // Gets geocoded point from response data of ICGC API for forward and reverse geocoding
-    private getGeocodedPoint(data: Record<string, any>): geocodedPoint[] {
-        var points: geocodedPoint[] = [];
+    private getGeocodedPoint(data: Record<string, any>): GeocodedPoint[] {
+        var points: GeocodedPoint[] = [];
         data.features.forEach((feature: Record<string, any>) => {
-            let point: geocodedPoint = {
+            let point: GeocodedPoint = {
                 textAddress: feature.properties.etiqueta,
                 coordinates: feature.geometry.coordinates,
                 addressType: feature.properties.layer

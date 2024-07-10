@@ -15,8 +15,8 @@ const contentHtml = (projectTitle: string, nameLastname: string) => `
     <div id="sidebar" class="sidebar">
       <div id="text-sidebar">
         <h2>Càlcul de rutes</h2>
-        <p>Cerca dues adreces per calcular una ruta. Amb 🞧 afegeix més cercadors. Doble click per eliminar un punt. 
-        Per més de dos punts es farà el càlcul de la ruta òptima segons el problema del viatjant de comerç.</p>
+        <p>Cerca dues adreces per calcular una ruta. Amb (+) afegeix més cercadors. Doble click al marcador per eliminar un punt. 
+        Per més de dos punts es farà el càlcul de la ruta òptima passant per tots els punts.</p>
       </div>
       <div id="sidebar-content">
         <!-- Afegir inputs cercadors -->

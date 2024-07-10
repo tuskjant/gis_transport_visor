@@ -1,7 +1,7 @@
-import { GeocoderComponent } from "./_GeocoderComponent";
-import { LeafletRouteController } from "./_LeafletRouteController";
+import { GeocoderComponent } from "./GeocoderComponent";
+import { LeafletRouteController } from "./LeafletRouteController";
 import { MarkerPoint} from "./interfaces";
-import { Routing } from "./_RouteService";
+import { Routing } from "./RouteService";
 
 
 
@@ -30,6 +30,7 @@ export class RoutePanel {
         this.controller.on('markerDblclick', this.onMarkerDblClick.bind(this));
         this.controller.on('markerMove', this.onMarkerMove.bind(this));
         this.controller.on('updatedRoutePoint', this.onUpdatedRoutePoint.bind(this));
+        this.controller.on('showRouteInfo', this.onRouteClick.bind(this));
 
 
         const sidebarContainer = document.getElementById(idContainer);
@@ -53,10 +54,10 @@ export class RoutePanel {
         */
 
         const input1 = new GeocoderComponent("i", this.idContainer, "inici...", this.map);
-        input1.getElement().addEventListener('addressSelected', this.onAddressReturned.bind(this));
+        input1.getElementInput().addEventListener('addressSelected', this.onAddressReturned.bind(this));
         this.inputs["i"] = input1;
         const input2 = new GeocoderComponent("f", this.idContainer, "final...", this.map);
-        input2.getElement().addEventListener('addressSelected', this.onAddressReturned.bind(this));
+        input2.getElementInput().addEventListener('addressSelected', this.onAddressReturned.bind(this));
         this.inputs["f"] = input2;
 
         // Counter for inputs (case TSP)
@@ -88,7 +89,7 @@ export class RoutePanel {
         // Add more inputs button eventlistener
         buttonAddInput.addEventListener('click', () => {
             const newInput = new GeocoderComponent(`p${next_input}`, this.idContainer, `parada - ${next_input}...`, this.map);
-            newInput.getElement().addEventListener('addressSelected', this.onAddressReturned.bind(this));
+            newInput.getElementInput().addEventListener('addressSelected', this.onAddressReturned.bind(this));
             this.inputs[`p${next_input}`] = newInput;
             next_input++;
         });
@@ -101,9 +102,12 @@ export class RoutePanel {
                 var option1 = input1.getOption();
                 if (option1 != null) {
                     input2.onOptionSelected(option1);
+                    input2.disableComponent();
                 } else {
                     checkOriginDest.checked = false;
                 }
+            } else if (target && !target.checked) {
+                input2.enableComponent();
             }
         });
 
@@ -140,6 +144,7 @@ export class RoutePanel {
     // When double click on a marker delete marker and clear input
     private onMarkerDblClick(routePoint: MarkerPoint): void {
         this.inputs[routePoint.pointId].clearInput();
+        delete this.routePoints[routePoint.pointId];
         this.calculateRoute();
     }
 
@@ -150,44 +155,72 @@ export class RoutePanel {
         this.calculateRoute();
     }
 
-
+    // When deleting, adding or moving a marker point
     private onUpdatedRoutePoint(newRoutePoint: MarkerPoint): void {
         //update route points list  
         if (newRoutePoint.pointId in this.routePoints) {
             delete this.routePoints[newRoutePoint.pointId];
         }
         this.routePoints[newRoutePoint.pointId] = newRoutePoint;
+        this.calculateRoute();       
+    }
+
+    // When clicking on route polyline show route info
+    private onRouteClick() {
         this.calculateRoute();
-            
     }
 
-    private calculateRoute(): void{
-        const numberRoutePoints = Object.keys(this.routePoints).length;
-        if (numberRoutePoints == 2) {
-            this.calculateRoute2Points();
-        } else if (numberRoutePoints > 2) {
-            this.calculateRouteTSP();
-        } 
-    }
-
-    private async calculateRoute2Points(): Promise<void> {
+    //Calculate route for marker points, get geometry -> draw route
+    private async calculateRoute(): Promise<void>{
         //Get coordinates of points
-        var routePointCoordinates: [number, number][] = [];
+        var stopPoints: MarkerPoint[] = [];
+        var startPoint: MarkerPoint | undefined;
+        var finalPoint: MarkerPoint | undefined;
         Object.values(this.routePoints).forEach(markerPoint => {
-            routePointCoordinates.push(markerPoint.point.coordinates);
+            if (markerPoint.pointType == 'inici') {
+                startPoint = markerPoint;
+            } else if (markerPoint.pointType== 'final') {
+                finalPoint = markerPoint
+            } else {
+                stopPoints.push(markerPoint);
+            }
         })
         //Get the route geometry using Routing class
-        const routing = new Routing(routePointCoordinates[0], routePointCoordinates[1]);
-        await routing.getRoute();
-        const routeGeometry = routing.getGeometry();
-        this.controller.updateRoute(routeGeometry);
+        if (startPoint && finalPoint) {
+            const routing = new Routing(startPoint, finalPoint, stopPoints);
+            if (stopPoints.length > 0) {
+                await routing.getRoute3P();
+            } else {
+                await routing.getRoute2P();
+            }
+            
+            const routeGeometry = routing.getGeometry();
+            this.controller.updateRoute(routeGeometry);
 
+            const distance = routing.getDistance();
+            const duration = routing.getDuration();
+            const routeOrder = routing.getRouteOrder();
+           
+            this.controller.showRouteInfo(distance, duration, routeOrder);
+
+            // Waypoints path
+            const waypoints = routing.getWayPoints();
+            var allpoints: [number, number][] = [];
+            allpoints.push(startPoint.point.coordinates);
+            stopPoints.forEach(element => {
+                allpoints.push(element.point.coordinates);
+            });
+            allpoints.push(finalPoint.point.coordinates);
+            this.controller.showRoutePath(waypoints, allpoints);
+        }   
 
     }
 
-    private async calculateRouteTSP(): Promise<void> {
 
-    }
+
+
+
+
    
 
 

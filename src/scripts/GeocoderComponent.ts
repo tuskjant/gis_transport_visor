@@ -1,10 +1,9 @@
-import { Geocoder } from './_GeocoderService';
-import { LeafletRouteController } from "./_LeafletRouteController";
+import { Geocoder } from './GeocoderService';
+import { LeafletRouteController } from "./LeafletRouteController";
 import { GeocodedPoint, MarkerPoint } from './interfaces';
 
 /**
- * S’encarregarà d’agafar l’input de l’usuari i resoldre-ho a una adreça amb unes coordenades.: Selector
- * Botó que permetrà capturar la coordenada fent click sobre el mapa.
+ * Component to get user input and return address with coordinates. Button to add point from map.
  */
 
 
@@ -62,12 +61,26 @@ export class GeocoderComponent{
         this.button_loc.addEventListener('click', this.onRoutePointMapInput.bind(this));
     }
 
-    public getElement(): HTMLInputElement{
+    public getElementInput(): HTMLInputElement{
         return this.input;
+    }
+
+    public getElementButton(): HTMLButtonElement{
+        return this.button_loc;
     }
 
     public getOption(): GeocodedPoint | null {
         return this.option;
+    }
+
+    public disableComponent(): void {
+        this.button_loc.disabled = true;
+        this.input.disabled = true;
+    }
+
+    public enableComponent(): void {
+        this.button_loc.disabled = false;
+        this.input.disabled = false;
     }
 
 
