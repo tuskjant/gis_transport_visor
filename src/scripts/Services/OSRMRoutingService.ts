@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { formatDistance, formatDuration } from './routedata';
-import { RoutingService, MarkerPoint } from './interfaces';
+import { formatDistance, formatDuration } from '../Utils/routeDataFormatter';
+import { MarkerPoint } from '../Domain/interfaces';
+import { RoutingService } from './RoutingService';
 
 
 /**

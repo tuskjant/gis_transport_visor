@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { GeocodedPoint, GeocodingService } from './interfaces';
+import { GeocodedPoint } from '../Domain/interfaces';
+import { GeocodingService } from './GeocodingService';
 
 /** 
  *  Class Geocoder for forward, reverse and autocomplete geocoding
@@ -8,7 +9,7 @@ import { GeocodedPoint, GeocodingService } from './interfaces';
 
 
 
-export class Geocoder implements GeocodingService{
+export class ICGCGeocodingService implements GeocodingService{
     readonly BASE_URL: string = "https://eines.icgc.cat";
     readonly FWD_URL: string = "/geocodificador/cerca";
     readonly RVS_URL: string = "/geocodificador/invers";

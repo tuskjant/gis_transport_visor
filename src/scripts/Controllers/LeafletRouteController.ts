@@ -1,8 +1,8 @@
 import L from 'leaflet';
-import { AwesomeNumberMarkers, AwesomeNumberMarkerOptions } from "./leafletAwesomeNumberMarkers";
+import { AwesomeNumberMarkers, AwesomeNumberMarkerOptions } from "../Utils/leafletAwesomeNumberMarkers";
 import "leaflet-arrowheads";
-import { EventEmitter } from './EventEmitter';
-import { MarkerPoint, RouteLine } from './interfaces'
+import { EventEmitter } from '../Utils/EventEmitter';
+import { MarkerPoint, RouteLine } from '../Domain/interfaces'
 
 /**  
  * Class to create markers, show route information, draw route polyline and paths

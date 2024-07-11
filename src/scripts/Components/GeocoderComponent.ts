@@ -1,6 +1,6 @@
-import { Geocoder } from './GeocoderService';
-import { LeafletRouteController } from "./LeafletRouteController";
-import { GeocodedPoint, MarkerPoint } from './interfaces';
+import { ICGCGeocodingService } from '../Services/ICGCGeocodingService';
+import { LeafletRouteController } from "../Controllers/LeafletRouteController";
+import { GeocodedPoint, MarkerPoint } from '../Domain/interfaces';
 
 /**
  * Component to get user input and return address with coordinates. Button to add point from map.
@@ -72,6 +72,7 @@ export class GeocoderComponent{
     public getOption(): GeocodedPoint | null {
         return this.option;
     }
+
 
     public disableComponent(): void {
         this.button_loc.disabled = true;
@@ -165,7 +166,7 @@ export class GeocoderComponent{
 
     // Fetch options from geocoder service by text. Autocomplete option
     private async fetchGeocoderOptions(textToSearch: string): Promise<GeocodedPoint[]> {
-        const geocoder = new Geocoder();
+        const geocoder = new ICGCGeocodingService();
         var center = this.controller.getMapCenter();
         const result = await geocoder.autocomplete(textToSearch, center);
         return result;
@@ -173,7 +174,7 @@ export class GeocoderComponent{
 
     // Fetch options from geocoder service by coordinates. Reverse geocoding option
     private async fetchGeocoderOptionsReverse(coords: [number, number]): Promise<GeocodedPoint[]> {
-        const geocoder = new Geocoder();
+        const geocoder = new ICGCGeocodingService();
         const result = await geocoder.reverseGeocoding(coords);
         return result;
     }

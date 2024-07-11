@@ -1,17 +1,17 @@
 import { GeocoderComponent } from "./GeocoderComponent";
-import { LeafletRouteController } from "./LeafletRouteController";
-import { MarkerPoint} from "./interfaces";
-import { Routing } from "./RouteService";
+import { LeafletRouteController } from "../Controllers/LeafletRouteController";
+import { MarkerPoint} from "../Domain/interfaces";
+import { Routing } from "../Services/OSRMRoutingService";
 
 
 
 /**
- * Panell de rutes:
- * - Crearà vàries instàncies de GeocoderComponent
- * - Botó de calcular ruta
+ * Route panel
+ * It creates instances of Geocoder component
+ * Manage options for creating markers and route
  */
 
-// rep un div amb panell lateral
+
 
 
 export class RoutePanel {

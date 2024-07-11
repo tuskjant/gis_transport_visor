@@ -3,7 +3,7 @@ import '../assets/leaflet_awesome_number_markers.css'
 import 'leaflet/dist/leaflet.css';
 import { startMapSkeleton } from './Skeleton.ts';
 import L from 'leaflet';
-import { RoutePanel } from './RoutePanel.ts';
+import { RoutePanel } from './Components/RoutePanel.ts';
 
 
 
