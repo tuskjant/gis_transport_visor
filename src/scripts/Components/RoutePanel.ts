@@ -55,9 +55,11 @@ export class RoutePanel {
 
         const input1 = new GeocoderComponent("i", this.idContainer, "inici...", this.map);
         input1.getElementInput().addEventListener('addressSelected', this.onAddressReturned.bind(this));
+        input1.on('inputDblClick', this.onInputDblClick.bind(this));
         this.inputs["i"] = input1;
         const input2 = new GeocoderComponent("f", this.idContainer, "final...", this.map);
         input2.getElementInput().addEventListener('addressSelected', this.onAddressReturned.bind(this));
+        input2.on('inputDblClick', this.onInputDblClick.bind(this));
         this.inputs["f"] = input2;
 
         // Counter for inputs (case TSP)
@@ -90,6 +92,7 @@ export class RoutePanel {
         buttonAddInput.addEventListener('click', () => {
             const newInput = new GeocoderComponent(`p${next_input}`, this.idContainer, `parada - ${next_input}...`, this.map);
             newInput.getElementInput().addEventListener('addressSelected', this.onAddressReturned.bind(this));
+            newInput.on('inputDblClick', this.onInputDblClick.bind(this));
             this.inputs[`p${next_input}`] = newInput;
             next_input++;
         });
@@ -143,8 +146,19 @@ export class RoutePanel {
 
     // When double click on a marker delete marker and clear input
     private onMarkerDblClick(routePoint: MarkerPoint): void {
+        console.log(routePoint.pointId);
         this.inputs[routePoint.pointId].clearInput();
         delete this.routePoints[routePoint.pointId];
+        this.calculateRoute();
+    }
+
+    // When double click on input clear input and delete marker
+    private onInputDblClick(id: string): void {
+        console.log(id)
+        console.log(this.routePoints);
+        this.inputs[id].clearInput();
+        delete this.routePoints[id];
+        console.log(this.routePoints);
         this.calculateRoute();
     }
 
@@ -180,7 +194,7 @@ export class RoutePanel {
             if (markerPoint.pointType == 'inici') {
                 startPoint = markerPoint;
             } else if (markerPoint.pointType== 'final') {
-                finalPoint = markerPoint
+                finalPoint = markerPoint;
             } else {
                 stopPoints.push(markerPoint);
             }

@@ -76,7 +76,7 @@ export class LeafletRouteController extends EventEmitter{
     }
 
     // Delete route point by id
-    private deleteRoutePoint(routePointId: string) {
+    public deleteRoutePoint(routePointId: string) {
         // Check if marker exist
         if (this.markers[routePointId]) {
             // Remove from map

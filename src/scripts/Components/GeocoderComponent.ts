@@ -1,13 +1,14 @@
 import { ICGCGeocodingService } from '../Services/ICGCGeocodingService';
 import { LeafletRouteController } from "../Controllers/LeafletRouteController";
 import { GeocodedPoint, MarkerPoint } from '../Domain/interfaces';
+import { EventEmitter } from '../Utils/EventEmitter';
 
 /**
  * Component to get user input and return address with coordinates. Button to add point from map.
  */
 
 
-export class GeocoderComponent{
+export class GeocoderComponent extends EventEmitter{
     private id: string;
     private container: HTMLElement;
     private placeholder: string;
@@ -23,6 +24,7 @@ export class GeocoderComponent{
     readonly timeout:number = 3000; 
 
     constructor(selectorId: string, containerId: string, placeholder: string, map: L.Map) {
+        super();
         this.id = selectorId;
         this.container = document.getElementById(containerId) as HTMLElement;
         this.placeholder = placeholder;
@@ -58,6 +60,7 @@ export class GeocoderComponent{
         geoComponent.appendChild(this.button_loc);
 
         this.input.addEventListener('input', this.onInputChange.bind(this));
+        this.input.addEventListener('dblclick',this.onInputDblClick.bind(this));
         this.button_loc.addEventListener('click', this.onRoutePointMapInput.bind(this));
     }
 
@@ -107,6 +110,11 @@ export class GeocoderComponent{
                 console.error('Error fetching options:', error);
             }
         }, this.timeout);
+    }
+
+    // When double click on input
+    private onInputDblClick() {
+        this.emit('inputDblClick', this.id);
     }
 
     // Update dropdown list
@@ -179,7 +187,7 @@ export class GeocoderComponent{
         return result;
     }
 
-    //When selecting a point in the map
+    //When selecting a point in the map geocode point
     public onRoutePointMapInput(): void {
         this.controller.useMapPointInput(async (clickedPoint: [number, number]) => {
             // Get reverse geocoding
