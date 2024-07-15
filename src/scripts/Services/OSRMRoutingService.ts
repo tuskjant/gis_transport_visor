@@ -16,6 +16,7 @@ export class Routing implements RoutingService {
     private APIsource: string = "first"; //first point is always starting point
     private APIdestination: string = "last";
     private APIroundtrip: string = "false";
+    private APIoverview: string = "full";
 
     private startPoint: MarkerPoint; //start point to calculate route (long, lat)
     private finalPoint: MarkerPoint; // end point to calculate route (long, lat)
@@ -42,7 +43,7 @@ export class Routing implements RoutingService {
     public async getRoute2P(): Promise<void> {
         const coordStart = this.startPoint.point.coordinates;
         const coordStop = this.finalPoint.point.coordinates;
-        const url_query: string = `${coordStart[0]},${coordStart[1]};${coordStop[0]},${coordStop[1]}?geometries=geojson`;
+        const url_query: string = `${coordStart[0]},${coordStart[1]};${coordStop[0]},${coordStop[1]}?geometries=geojson&overview=${this.APIoverview}`;
         const url: string = this.BASE_URL + this.ROUTE_URL_2P + url_query;
         try {
             const response = await axios.get(url);
@@ -63,7 +64,7 @@ export class Routing implements RoutingService {
                 .join(";");
             routeString += `;${this.finalPoint.point.coordinates[0]},${this.finalPoint.point.coordinates[1]}`;
 
-            const url_query: string = `${routeString}?roundtrip=${this.APIroundtrip}&source=${this.APIsource}&destination=${this.APIdestination}&geometries=geojson`;
+            const url_query: string = `${routeString}?roundtrip=${this.APIroundtrip}&source=${this.APIsource}&destination=${this.APIdestination}&geometries=geojson&overview=${this.APIoverview}`;
             const url: string = this.BASE_URL + this.ROUTE_URL_3P + url_query;
 
             try {
