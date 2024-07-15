@@ -222,7 +222,6 @@ export class GeocoderComponent extends EventEmitter {
         var newGeocodedPoint = (
             await this.fetchGeocoderOptionsReverse(newPoint.point.coordinates)
         )[0];
-        console.log(newGeocodedPoint);
         var newMarkerPoint = newPoint;
         newMarkerPoint.point = newGeocodedPoint;
         this.input.value = newMarkerPoint.point.textAddress;
