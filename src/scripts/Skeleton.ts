@@ -1,6 +1,6 @@
 /**
  * Page skeleton with header, footer and left panel
- * 
+ *
  * @param projectTitle Title of the project
  * @param nameLastname Author
  * @returns html
@@ -31,36 +31,36 @@ const contentHtml = (projectTitle: string, nameLastname: string) => `
 `;
 
 export const startMapSkeleton = (
-  document: Document,
-  projectTitle = "GIS Integral de transport",
-  nameLastname = "Gemma Riu"
+    document: Document,
+    projectTitle = "GIS Integral de transport",
+    nameLastname = "Gemma Riu"
 ) => {
-  document.title = projectTitle;
-  // 1. Seleccionamos el id del elemento principal
-  const app = document.getElementById("app");
-  if (app !== null && app !== undefined) {
-    app.classList.add("grid-container");
-  }
-  // 2.- Creamos una capa temporal para añadir el contenido HTML
-  const temp = document.createElement("div");
-  // 3.- Incrustamos el HTML de la constante
-  temp.innerHTML = contentHtml(projectTitle, nameLastname);
-  // 4.- Añadimos en el primer nodo
-  while (temp.firstChild) {
-    app?.appendChild(temp.firstChild);
-  }
-  // Añadir panel lateral y botón para abrir y cerrarlo
-  const sidebar = document.getElementById("sidebar") as HTMLElement;
-  const toggleBtn = document.getElementById("toggle-btn") as HTMLElement;
-
-  toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-    if (sidebar.classList.contains('open')) {
-      toggleBtn.style.left = '310px';
-      toggleBtn.textContent = '🡸'; 
-    } else {
-      toggleBtn.style.left = '10px';
-      toggleBtn.textContent = '🡺'; 
+    document.title = projectTitle;
+    // 1. Seleccionamos el id del elemento principal
+    const app = document.getElementById("app");
+    if (app !== null && app !== undefined) {
+        app.classList.add("grid-container");
     }
-  });
+    // 2.- Creamos una capa temporal para añadir el contenido HTML
+    const temp = document.createElement("div");
+    // 3.- Incrustamos el HTML de la constante
+    temp.innerHTML = contentHtml(projectTitle, nameLastname);
+    // 4.- Añadimos en el primer nodo
+    while (temp.firstChild) {
+        app?.appendChild(temp.firstChild);
+    }
+    // Añadir panel lateral y botón para abrir y cerrarlo
+    const sidebar = document.getElementById("sidebar") as HTMLElement;
+    const toggleBtn = document.getElementById("toggle-btn") as HTMLElement;
+
+    toggleBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        if (sidebar.classList.contains("open")) {
+            toggleBtn.style.left = "310px";
+            toggleBtn.textContent = "🡸";
+        } else {
+            toggleBtn.style.left = "10px";
+            toggleBtn.textContent = "🡺";
+        }
+    });
 };

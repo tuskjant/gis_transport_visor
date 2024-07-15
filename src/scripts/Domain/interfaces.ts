@@ -1,9 +1,7 @@
-
-
 export interface MarkerPoint {
-    pointId: string,
-    pointType: string,
-    point: GeocodedPoint
+    pointId: string;
+    pointType: string;
+    point: GeocodedPoint;
 }
 
 export interface GeocodedPoint {
@@ -16,6 +14,3 @@ export interface RouteLine {
     coordinates: [number, number][];
     type: string;
 }
-
-
-

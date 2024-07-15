@@ -15,14 +15,14 @@ export class EventEmitter {
     public off(event: string, listener: EventCallback): void {
         if (!this.events[event]) return;
 
-        this.events[event] = this.events[event].filter(l => l !== listener);
+        this.events[event] = this.events[event].filter((l) => l !== listener);
     }
 
     // Método para emitir un evento
     public emit(event: string, ...args: any[]): void {
         if (!this.events[event]) return;
 
-        this.events[event].forEach(listener => {
+        this.events[event].forEach((listener) => {
             listener(...args);
         });
     }

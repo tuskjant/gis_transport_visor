@@ -1,14 +1,13 @@
-import { ICGCGeocodingService } from '../Services/ICGCGeocodingService';
+import { ICGCGeocodingService } from "../Services/ICGCGeocodingService";
 import { LeafletRouteController } from "../Controllers/LeafletRouteController";
-import { GeocodedPoint, MarkerPoint } from '../Domain/interfaces';
-import { EventEmitter } from '../Utils/EventEmitter';
+import { GeocodedPoint, MarkerPoint } from "../Domain/interfaces";
+import { EventEmitter } from "../Utils/EventEmitter";
 
 /**
  * Component to get user input and return address with coordinates. Button to add point from map.
  */
 
-
-export class GeocoderComponent extends EventEmitter{
+export class GeocoderComponent extends EventEmitter {
     private id: string;
     private container: HTMLElement;
     private placeholder: string;
@@ -21,36 +20,41 @@ export class GeocoderComponent extends EventEmitter{
     private button_loc: HTMLButtonElement;
     private dropdown: HTMLElement;
     private timeoutId: number | undefined;
-    readonly timeout:number = 3000; 
+    readonly timeout: number = 3000;
 
-    constructor(selectorId: string, containerId: string, placeholder: string, map: L.Map) {
+    constructor(
+        selectorId: string,
+        containerId: string,
+        placeholder: string,
+        map: L.Map
+    ) {
         super();
         this.id = selectorId;
         this.container = document.getElementById(containerId) as HTMLElement;
         this.placeholder = placeholder;
         this.map = map;
         this.controller = new LeafletRouteController(this.map);
-        
-        const geoComponent = document.createElement('div');
-        geoComponent.id = 'geocod-component-container';
 
-        this.idlabel = document.createElement('div');
-        this.idlabel.className = 'id-label';
+        const geoComponent = document.createElement("div");
+        geoComponent.id = "geocod-component-container";
+
+        this.idlabel = document.createElement("div");
+        this.idlabel.className = "id-label";
         this.idlabel.id = `${this.id}_label`;
         this.idlabel.innerHTML = `<h4>${this.id} </h4>`;
 
-        this.input = document.createElement('input');
-        this.input.id = `${this.id}_input`
-        this.input.className = 'custom-input';
+        this.input = document.createElement("input");
+        this.input.id = `${this.id}_input`;
+        this.input.className = "custom-input";
         this.input.placeholder = this.placeholder;
-        this.dropdown = document.createElement('div');
-        this.dropdown.classList.add('dropdown');
+        this.dropdown = document.createElement("div");
+        this.dropdown.classList.add("dropdown");
 
         //Create button
-        this.button_loc = document.createElement('button');
-        this.button_loc.type = 'button';
-        this.button_loc.className = 'custom-button';
-        this.button_loc.innerHTML = '🏴';
+        this.button_loc = document.createElement("button");
+        this.button_loc.type = "button";
+        this.button_loc.className = "custom-button";
+        this.button_loc.innerHTML = "🏴";
         this.button_loc.id = `${this.id}_button`;
 
         this.container.appendChild(geoComponent);
@@ -59,23 +63,28 @@ export class GeocoderComponent extends EventEmitter{
         geoComponent.appendChild(this.dropdown);
         geoComponent.appendChild(this.button_loc);
 
-        this.input.addEventListener('input', this.onInputChange.bind(this));
-        this.input.addEventListener('dblclick',this.onInputDblClick.bind(this));
-        this.button_loc.addEventListener('click', this.onRoutePointMapInput.bind(this));
+        this.input.addEventListener("input", this.onInputChange.bind(this));
+        this.input.addEventListener(
+            "dblclick",
+            this.onInputDblClick.bind(this)
+        );
+        this.button_loc.addEventListener(
+            "click",
+            this.onRoutePointMapInput.bind(this)
+        );
     }
 
-    public getElementInput(): HTMLInputElement{
+    public getElementInput(): HTMLInputElement {
         return this.input;
     }
 
-    public getElementButton(): HTMLButtonElement{
+    public getElementButton(): HTMLButtonElement {
         return this.button_loc;
     }
 
     public getOption(): GeocodedPoint | null {
         return this.option;
     }
-
 
     public disableComponent(): void {
         this.button_loc.disabled = true;
@@ -86,7 +95,6 @@ export class GeocoderComponent extends EventEmitter{
         this.button_loc.disabled = false;
         this.input.disabled = false;
     }
-
 
     // When text input change, look for options
     private async onInputChange(event: Event): Promise<void> {
@@ -107,21 +115,21 @@ export class GeocoderComponent extends EventEmitter{
                 const options = await this.fetchGeocoderOptions(textToSearch);
                 this.updateDropdown(options);
             } catch (error) {
-                console.error('Error fetching options:', error);
+                console.error("Error fetching options:", error);
             }
         }, this.timeout);
     }
 
     // When double click on input
     private onInputDblClick() {
-        this.emit('inputDblClick', this.id);
+        this.emit("inputDblClick", this.id);
     }
 
     // Update dropdown list
     private updateDropdown(options: GeocodedPoint[]): void {
         this.clearDropdown();
-        options.forEach(option => {
-            const optionElement = document.createElement('div');
+        options.forEach((option) => {
+            const optionElement = document.createElement("div");
             var type: string = "";
             switch (option.addressType) {
                 case "address":
@@ -134,9 +142,12 @@ export class GeocoderComponent extends EventEmitter{
                     type = "(topònim)-";
                     break;
             }
-            optionElement.innerHTML = `<span class="type-style">${type} </span><span>${option.textAddress}</span>`
-            optionElement.classList.add('dropdown-option', `tipus_${option.addressType}`);
-            optionElement.addEventListener('click', () => {
+            optionElement.innerHTML = `<span class="type-style">${type} </span><span>${option.textAddress}</span>`;
+            optionElement.classList.add(
+                "dropdown-option",
+                `tipus_${option.addressType}`
+            );
+            optionElement.addEventListener("click", () => {
                 this.onOptionSelected(option);
             });
             this.dropdown.appendChild(optionElement);
@@ -150,15 +161,14 @@ export class GeocoderComponent extends EventEmitter{
         this.clearDropdown();
         var markerPoint: MarkerPoint = {
             pointId: this.id,
-            pointType: 'undefined',
-            point: option
+            pointType: "undefined",
+            point: option,
         };
-        const inputEvent = new CustomEvent('addressSelected', {
+        const inputEvent = new CustomEvent("addressSelected", {
             detail: markerPoint,
-        }) 
-        this.input.dispatchEvent(inputEvent); 
+        });
+        this.input.dispatchEvent(inputEvent);
     }
-
 
     // Clear dropdown list
     private clearDropdown(): void {
@@ -169,11 +179,13 @@ export class GeocoderComponent extends EventEmitter{
 
     // Clear input value text
     public clearInput(): void {
-        this.input.value = '';
+        this.input.value = "";
     }
 
     // Fetch options from geocoder service by text. Autocomplete option
-    private async fetchGeocoderOptions(textToSearch: string): Promise<GeocodedPoint[]> {
+    private async fetchGeocoderOptions(
+        textToSearch: string
+    ): Promise<GeocodedPoint[]> {
         const geocoder = new ICGCGeocodingService();
         var center = this.controller.getMapCenter();
         const result = await geocoder.autocomplete(textToSearch, center);
@@ -181,7 +193,9 @@ export class GeocoderComponent extends EventEmitter{
     }
 
     // Fetch options from geocoder service by coordinates. Reverse geocoding option
-    private async fetchGeocoderOptionsReverse(coords: [number, number]): Promise<GeocodedPoint[]> {
+    private async fetchGeocoderOptionsReverse(
+        coords: [number, number]
+    ): Promise<GeocodedPoint[]> {
         const geocoder = new ICGCGeocodingService();
         const result = await geocoder.reverseGeocoding(coords);
         return result;
@@ -189,22 +203,28 @@ export class GeocoderComponent extends EventEmitter{
 
     //When selecting a point in the map geocode point
     public onRoutePointMapInput(): void {
-        this.controller.useMapPointInput(async (clickedPoint: [number, number]) => {
-            // Get reverse geocoding
-            const geocodedClickedPoint = await this.fetchGeocoderOptionsReverse([clickedPoint[1], clickedPoint[0]]); //latlng -> lnglat
-            // Update option selected  
-            this.onOptionSelected(geocodedClickedPoint[0]);
-        });
+        this.controller.useMapPointInput(
+            async (clickedPoint: [number, number]) => {
+                // Get reverse geocoding
+                const geocodedClickedPoint =
+                    await this.fetchGeocoderOptionsReverse([
+                        clickedPoint[1],
+                        clickedPoint[0],
+                    ]); //latlng -> lnglat
+                // Update option selected
+                this.onOptionSelected(geocodedClickedPoint[0]);
+            }
+        );
     }
 
     //Update text from new coordinates
-    public async updateInput (newPoint: MarkerPoint) {
-        var newGeocodedPoint = (await this.fetchGeocoderOptionsReverse(newPoint.point.coordinates))[0];
+    public async updateInput(newPoint: MarkerPoint) {
+        var newGeocodedPoint = (
+            await this.fetchGeocoderOptionsReverse(newPoint.point.coordinates)
+        )[0];
         console.log(newGeocodedPoint);
         var newMarkerPoint = newPoint;
         newMarkerPoint.point = newGeocodedPoint;
         this.input.value = newMarkerPoint.point.textAddress;
     }
-
-
 }

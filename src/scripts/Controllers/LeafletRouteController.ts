@@ -1,27 +1,29 @@
-import L from 'leaflet';
-import { AwesomeNumberMarkers, AwesomeNumberMarkerOptions } from "../Utils/leafletAwesomeNumberMarkers";
+import L from "leaflet";
+import {
+    AwesomeNumberMarkers,
+    AwesomeNumberMarkerOptions,
+} from "../Utils/leafletAwesomeNumberMarkers";
 import "leaflet-arrowheads";
-import { EventEmitter } from '../Utils/EventEmitter';
-import { MarkerPoint, RouteLine } from '../Domain/interfaces'
+import { EventEmitter } from "../Utils/EventEmitter";
+import { MarkerPoint, RouteLine } from "../Domain/interfaces";
 
-/**  
+/**
  * Class to create markers, show route information, draw route polyline and paths
-*/
+ */
 
-export class LeafletRouteController extends EventEmitter{
+export class LeafletRouteController extends EventEmitter {
     private map: L.map;
     private markers: { [id: string]: L.Marker } = {};
     private routePolyline: L.Polyline;
     private paths: L.Polyline[] = []; //Polyline representing the path from geocoded point to point in the route
     //when they're not the same point (case point far from street)
-    
 
     constructor(map: L.map) {
         super();
         this.map = map;
     }
 
-    public getNumMarcadores(): number{
+    public getNumMarcadores(): number {
         return Object.keys(this.markers).length;
     }
 
@@ -40,11 +42,14 @@ export class LeafletRouteController extends EventEmitter{
             number: routePointId,
         } as AwesomeNumberMarkerOptions);
 
-        const marcador = L.marker([routePoint.point.coordinates[1], routePoint.point.coordinates[0]], {
-            draggable: true,
-            title: `Marcador ${routePointId}`,
-            icon: awesomeNumberMarkerIcon,
-        });
+        const marcador = L.marker(
+            [routePoint.point.coordinates[1], routePoint.point.coordinates[0]],
+            {
+                draggable: true,
+                title: `Marcador ${routePointId}`,
+                icon: awesomeNumberMarkerIcon,
+            }
+        );
 
         //Add to list of markers
         this.markers[routePointId] = marcador;
@@ -52,27 +57,25 @@ export class LeafletRouteController extends EventEmitter{
         marcador.addTo(this.map);
 
         //Event when creating or updating route points
-        this.emit('updatedRoutePoint', routePoint);
+        this.emit("updatedRoutePoint", routePoint);
 
         // Event handle dblclick -> emit event markerDblclick
-        marcador.on('dblclick', () => {
+        marcador.on("dblclick", () => {
             this.deleteRoutePoint(routePointId);
             this.deleteRoutePolyline();
-            this.emit('markerDblclick', routePoint);
+            this.emit("markerDblclick", routePoint);
         });
-        
+
         // Event handle moveend -> emit event markerMove
-        marcador.on('moveend', () => {
+        marcador.on("moveend", () => {
             var newRoutePoint = routePoint;
             newRoutePoint.point.coordinates[0] = marcador.getLatLng().lng;
             newRoutePoint.point.coordinates[1] = marcador.getLatLng().lat;
-            this.emit('markerMove', newRoutePoint);
-            this.emit('updatedRoutePoint', newRoutePoint);
+            this.emit("markerMove", newRoutePoint);
+            this.emit("updatedRoutePoint", newRoutePoint);
         });
 
         this.fitToElements();
-
-
     }
 
     // Delete route point by id
@@ -83,20 +86,20 @@ export class LeafletRouteController extends EventEmitter{
             this.markers[routePointId].remove();
             // Remove from marcadores object
             delete this.markers[routePointId];
-        }      
+        }
     }
 
     // Delete route polyline
-    private deleteRoutePolyline() {
+    public deleteRoutePolyline() {
         //Delete route if exist
         if (this.routePolyline != null) {
             this.map.removeLayer(this.routePolyline);
         }
         //Delete paths if exist
         if (this.paths.length > 0) {
-            this.paths.forEach(path => {
+            this.paths.forEach((path) => {
                 this.map.removeLayer(path);
-            })
+            });
         }
     }
 
@@ -104,7 +107,7 @@ export class LeafletRouteController extends EventEmitter{
     private fitToElements() {
         if (Object.keys(this.markers).length > 1) {
             var groupElements: L.Layer[] = [];
-            Object.values(this.markers).forEach(marker => {
+            Object.values(this.markers).forEach((marker) => {
                 groupElements.push(marker);
             });
             if (this.routePolyline) {
@@ -114,7 +117,7 @@ export class LeafletRouteController extends EventEmitter{
             const bounds = featureGroup.getBounds();
             const expandedBounds = bounds.pad(0.2);
             this.map.fitBounds(expandedBounds);
-        } 
+        }
     }
 
     // Draw routeline from geometry (list of coordinates)
@@ -141,53 +144,65 @@ export class LeafletRouteController extends EventEmitter{
                 yawn: 45,
             })
             .addTo(this.map);
-        
+
         this.fitToElements();
 
         //Show route info on click
         this.routePolyline.on("click", () => {
-            this.emit('showRouteInfo');
+            this.emit("showRouteInfo");
         });
-
     }
 
     //Enable route point input
-    public useMapPointInput(callback: (clickedPoint: [number, number]) => void) {
+    public useMapPointInput(
+        callback: (clickedPoint: [number, number]) => void
+    ) {
         const clickHandler = (e: L.LeafletMouseEvent) => {
             const { lat, lng } = e.latlng;
             callback([lat, lng]);
-            this.map.off('click', clickHandler);
+            this.map.off("click", clickHandler);
         };
 
-        this.map.on('click', clickHandler);
+        this.map.on("click", clickHandler);
     }
 
     //Map center
     public getMapCenter(): [number, number] {
-        var center: [number, number] = ([this.map.getCenter().lng, this.map.getCenter().lat]);  //focus in center map
+        var center: [number, number] = [
+            this.map.getCenter().lng,
+            this.map.getCenter().lat,
+        ]; //focus in center map
         return center;
     }
 
     //Popup with route info
-    public showRouteInfo(distance: string, duration: string, routeOrder: string) {
+    public showRouteInfo(
+        distance: string,
+        duration: string,
+        routeOrder: string
+    ) {
         const mapBounds = this.map.getBounds().pad(-0.2);
-        var latlng = [mapBounds.getNorth(), (mapBounds.getWest() + mapBounds.getEast()) / 2]
+        var latlng = [
+            mapBounds.getNorth(),
+            (mapBounds.getWest() + mapBounds.getEast()) / 2,
+        ];
         //if (routeOrder)
         var popup = L.popup(latlng, {
-            content: `<h5>Ruta: ${routeOrder}</h5><h5>Temps: ${duration}</h5><h5>Distancia: ${distance}</h5>`
-        })
-            .openOn(this.map);
-        
+            content: `<h5>Ruta: ${routeOrder}</h5><h5>Temps: ${duration}</h5><h5>Distancia: ${distance}</h5>`,
+        }).openOn(this.map);
     }
 
     //Path from stopPoint selected to effective waypoint on route
-    public showRoutePath(waypoints: [number, number][], stoppoints: [number, number][]): void {
-        let pairedPoints: [[number, number], [number, number]] [] = [];
+    public showRoutePath(
+        waypoints: [number, number][],
+        stoppoints: [number, number][]
+    ): void {
+        let pairedPoints: [[number, number], [number, number]][] = [];
         for (let i = 0; i < waypoints.length; i++) {
             pairedPoints.push([waypoints[i], stoppoints[i]]);
-        }   
+        }
 
-        pairedPoints.forEach(pair => {
+        pairedPoints.forEach((pair) => {
             const startPath = L.polyline(
                 [
                     [pair[0][1], pair[0][0]],
@@ -201,11 +216,5 @@ export class LeafletRouteController extends EventEmitter{
             ).addTo(this.map);
             this.paths.push(startPath);
         });
-          
     }
-
-
-
-
-
 }
