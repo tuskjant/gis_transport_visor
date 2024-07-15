@@ -21,9 +21,11 @@ Visor que forma part del projecte GIS Integral de Transport, fa servir l'API d'O
 
 
 ## Ús
-Obra el navegador i accedeix a `http://localhost:5173`.
-Introdueix una adreça a inici, al prèmer enter retornarà l'adreça trobada i apareixerà un marcador al punt.
-Introdueix una adreça a destí, al prèmer enter retornarà l'adreça trobada i apareixerà un marcador al punt i mostrarà la ruta i la seva informació entre l'inici i el destí.
-Es poden moure els marcadors i recalcularà la ruta. Per eliminar un marcador fer doble-click. Per obtenir informació de la ruta fer click sobre la ruta.
+Obre el navegador i accedeix a `http://localhost:5173`.
+Introdueix una adreça a inici, selecciona l'adreça trobada i apareixerà un marcador al punt. Alternativament fes click sobre l'icona bandera i seguidament fes click en un punt al mapa i apareixerà un marcador al punt seleccionat i s'indicarà l'adreça corresponent. 
+Fes el mateix per una adreça destí i es mostrarà un segon marcador, la ruta entre l'inici i el destí, i la informació de la ruta.
+Es poden moure els marcadors i recalcularà la ruta. Per eliminar un marcador fer doble-click sobre el marcador o el text de l'adreça. Per obtenir informació de la ruta fer click sobre la ruta.
 
-Per obtenir la ruta segons el Problema del Venedor Ambulant (TSP) agregar més cercadors fent click al botó "+". Es poden afegir tans cercadors com es vulgui. Al introduir la nova adreça recalcularà la ruta solucionant el TSP amb una ruta tancada desde l'inici.
+
+Per obtenir la ruta segons el Problema del Venedor Ambulant (TSP) agregar més cercadors fent click al botó "+". Es poden afegir tans cercadors com es vulgui. Per crear una ruta tancada amb inici igual a final fer marcar la opció "Ruta circular".
+ A l'introduir la nova adreça recalcularà la ruta solucionant el TSP i mostrará l'ordre de la ruta a seguir.
