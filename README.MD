@@ -21,7 +21,6 @@ Visor que forma part del projecte GIS Integral de Transport, fa servir l'API d'O
 
 
 ## Ús
-Obre el navegador i accedeix a `http://localhost:5173`.
 Introdueix una adreça a inici, selecciona l'adreça trobada i apareixerà un marcador al punt. Alternativament fes click sobre l'icona bandera i seguidament fes click en un punt al mapa i apareixerà un marcador al punt seleccionat i s'indicarà l'adreça corresponent. 
 Fes el mateix per una adreça destí i es mostrarà un segon marcador, la ruta entre l'inici i el destí, i la informació de la ruta.
 Es poden moure els marcadors i recalcularà la ruta. Per eliminar un marcador fer doble-click sobre el marcador o el text de l'adreça. Per obtenir informació de la ruta fer click sobre la ruta.
