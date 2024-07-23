@@ -195,7 +195,7 @@ export class GeocoderComponent extends EventEmitter {
     // Fetch options from geocoder service by coordinates. Reverse geocoding option
     private async fetchGeocoderOptionsReverse(
         coords: [number, number]
-    ): Promise<GeocodedPoint[]> {
+    ): Promise<GeocodedPoint[] | null> {
         const geocoder = new ICGCGeocodingService();
         const result = await geocoder.reverseGeocoding(coords);
         return result;
@@ -212,18 +212,28 @@ export class GeocoderComponent extends EventEmitter {
                         clickedPoint[0],
                     ]); //latlng -> lnglat
                 // Update option selected
-                this.onOptionSelected(geocodedClickedPoint[0]);
+                if (geocodedClickedPoint != null) {
+                    this.onOptionSelected(geocodedClickedPoint[0]);
+                } 
             }
         );
     }
 
     //Update text from new coordinates
     public async updateInput(newPoint: MarkerPoint) {
-        var newGeocodedPoint = (
-            await this.fetchGeocoderOptionsReverse(newPoint.point.coordinates)
-        )[0];
-        var newMarkerPoint = newPoint;
-        newMarkerPoint.point = newGeocodedPoint;
-        this.input.value = newMarkerPoint.point.textAddress;
+        var newGeocodedPoint: GeocodedPoint[] | null = null;
+        try {
+            newGeocodedPoint = (
+                await this.fetchGeocoderOptionsReverse(newPoint.point.coordinates)
+            );
+        } catch (error) {
+            console.error(error)
+        }
+
+        if (newGeocodedPoint != null) {
+            var newMarkerPoint = newPoint;
+            newMarkerPoint.point = newGeocodedPoint[0];
+            this.input.value = newMarkerPoint.point.textAddress;
+        }      
     }
 }

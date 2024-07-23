@@ -4,10 +4,12 @@ export interface GeocodingService {
     forwardGeocoding(
         textAddress: string,
         focus: [number, number] | null
-    ): Promise<GeocodedPoint[]>;
-    reverseGeocoding(coords: [number, number]): Promise<GeocodedPoint[]>;
+    ): Promise<GeocodedPoint[]> ;
+
+    reverseGeocoding(coords: [number, number]): Promise<GeocodedPoint[] | null> ;
+
     autocomplete(
         text: string,
         focus: [number, number] | null
-    ): Promise<GeocodedPoint[]>;
+    ): Promise<GeocodedPoint[]> ;
 }

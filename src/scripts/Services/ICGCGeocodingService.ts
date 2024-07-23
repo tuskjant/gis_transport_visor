@@ -13,7 +13,7 @@ export class ICGCGeocodingService implements GeocodingService {
     readonly RVS_URL: string = "/geocodificador/invers";
     readonly ACP_URL: string = "/geocodificador/autocompletar";
     readonly layers: string = "address,topo1,topo2";
-    readonly layerReverse: string = "address";
+    readonly layerReverse: string = "address,topo1,topo2";
     readonly size: string = "1";
     readonly autocompleteSize: string = "5";
     readonly errorPoint: GeocodedPoint[] = [
@@ -52,12 +52,15 @@ export class ICGCGeocodingService implements GeocodingService {
     //Reverse geocoding
     public async reverseGeocoding(
         coords: [number, number]
-    ): Promise<GeocodedPoint[]> {
+    ): Promise<GeocodedPoint[] | null>  {
         const urlQuery: string = `lat=${coords[1]}&lon=${coords[0]}&layers=${this.layerReverse}&size=${this.size}`;
         const url: string = this.BASE_URL + this.RVS_URL + "?" + urlQuery;
         try {
             const response = await axios.get(url);
-            return this.getGeocodedPoint(response.data);
+            if (Object.keys(response.data.features).length > 0) {
+                return this.getGeocodedPoint(response.data);
+            }
+            return null;           
         } catch (error) {
             console.error(error);
             return this.errorPoint;
@@ -88,7 +91,7 @@ export class ICGCGeocodingService implements GeocodingService {
     }
 
     // Gets geocoded point from response data of ICGC API for forward and reverse geocoding
-    private getGeocodedPoint(data: Record<string, any>): GeocodedPoint[] {
+    private getGeocodedPoint(data: Record<string, any>): GeocodedPoint[]{
         var points: GeocodedPoint[] = [];
         data.features.forEach((feature: Record<string, any>) => {
             let point: GeocodedPoint = {
@@ -98,6 +101,6 @@ export class ICGCGeocodingService implements GeocodingService {
             };
             points.push(point);
         });
-        return points;
+        return points;       
     }
 }
