@@ -2,6 +2,7 @@ import { GeocoderComponent } from "./GeocoderComponent";
 import { LeafletRouteController } from "../Controllers/LeafletRouteController";
 import { MarkerPoint } from "../Domain/interfaces";
 import { Routing } from "../Services/OSRMRoutingService";
+import { RoutingData } from "../Services/RoutingService";
 
 /**
  * Route panel
@@ -218,31 +219,26 @@ export class RoutePanel {
         });
         //Get the route geometry using Routing class
         if (startPoint && finalPoint) {
-            const routing = new Routing(startPoint, finalPoint, stopPoints);
+            const routing = new Routing();
+            var routingData: RoutingData;
             if (stopPoints.length > 0) {
-                await routing.getRoute3P();
+                routingData = await routing.getRoute3P(startPoint, stopPoints, finalPoint);
             } else {
-                await routing.getRoute2P();
+                routingData = await routing.getRoute2P(startPoint, finalPoint);
             }
 
-            const routeGeometry = routing.getGeometry();
-            this.controller.updateRoute(routeGeometry);
 
-            const distance = routing.getDistance();
-            const duration = routing.getDuration();
-            const routeOrder = routing.getRouteOrder();
-
-            this.controller.showRouteInfo(distance, duration, routeOrder);
+            this.controller.updateRoute(routingData.geometry);
+            this.controller.showRouteInfo(routingData.distance, routingData.duration, routingData.routeOrder);
 
             // Waypoints path
-            const waypoints = routing.getWayPoints();
             var allpoints: [number, number][] = [];
             allpoints.push(startPoint.point.coordinates);
             stopPoints.forEach((element) => {
                 allpoints.push(element.point.coordinates);
             });
             allpoints.push(finalPoint.point.coordinates);
-            this.controller.showRoutePath(waypoints, allpoints);
+            this.controller.showRoutePath(routingData.wayPoints, allpoints);
         }
     }
 }
