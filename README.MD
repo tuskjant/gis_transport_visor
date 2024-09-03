@@ -1,5 +1,5 @@
 # GIS Integral de Transport
-Visor que forma part del projecte GIS Integral de Transport, fa servir l'API d'OSRM pel càlcul de rutes:
+Visor que forma part del projecte GIS Integral de Transport, fa servir el servidor d'OSRM pel càlcul de rutes:
 - Ruta entre dos punts
 - Per a més de dos punts resolt el Problema del Venedor Ambulant (Travelling Salesman Problem)
 
