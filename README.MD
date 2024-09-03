@@ -1,7 +1,7 @@
 # GIS Integral de Transport
 Visor que forma part del projecte GIS Integral de Transport, fa servir el servei d'enrutament de OSRM pel càlcul de rutes:
 - Ruta entre dos punts
-- Per a més de dos punts resolt el Problema del Venedor Ambulant (Travelling Salesman Problem)
+- Per a més de dos punts resol el Problema del Venedor Ambulant (Travelling Salesman Problem)
 
 ## Característiques
 - Visualització de mapes amb Leaflet
