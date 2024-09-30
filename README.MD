@@ -1,30 +1,38 @@
-# GIS Integral de Transport
-Visor que forma part del projecte GIS Integral de Transport, fa servir l'API d'OSRM pel càlcul de rutes:
-- Ruta entre dos punts
-- Per a més de dos punts resolt el Problema del Venedor Ambulant (Travelling Salesman Problem)
+# GIS Integral de Transport Viewer
+## Overview
+Viewer that is part of the GIS Integral de Transport project, using the OSRM API for route calculation:
++ Route between two points
++ For more than two points, it solves the Travelling Salesman Problem (TSP).
+It's a web-based UI built using TypeScript and Leaflet for map rendering and route calculation.
 
-## Característiques
-- Visualització de mapes amb Leaflet
-- Geocodificador d'adreces del ICGC
-- Enrutament dinàmic amb OSRM
-- Marcadors interactius
+### Features
+- Map visualization with Leaflet
+- Address geocoding with ICGC API
+- Dynamic routing with OSRM
+- Interactive markers
 
-## Instal·lació
-1- Clona el repositori: "https://github.com/tuskjant/gis_transport_visor"
+The network data can be prepared and modified using the [GIS Integral de Transport Editor](https://github.com/tuskjant/OSMEditorForRouting) 
 
-2- Instal·la les dependencies: 
+## Usage
+Enter an address in the start field, select the found address, and a marker will appear at the location. Alternatively, click on the flag icon, then click on a point on the map, and a marker will appear at the selected point, with the corresponding address displayed.
+
+Do the same for a destination address, and a second marker will appear along with the route between the start and the destination, showing the route information. You can move the markers, and the route will be recalculated. To delete a marker, double-click on the marker or the address text. To get route details, click on the route.
+
+For solving the Travelling Salesman Problem (TSP), add more search fields by clicking the "+" button. You can add as many as needed. To create a closed route where the start and end points are the same, check the "Circular route" option. When a new address is added, the route will be recalculated, solving the TSP and showing the order of the route.
+
+## Sample
+<img src="/docs/images/viewer.PNG" alt="Viewer image" width="500"/>
+
+
+## Installation
+1- Clone the repository: "https://github.com/tuskjant/gis_transport_visor"
+
+2- Install dependencies:
     ```cd gis_transport_visor
        npm install```
 
-3- Inicia el servidor: ```npm run dev```
+3- Start the server: ```npm run dev```
 
+## Development
+See [architecture overview](/docs/architecture-overview.md) for details.
 
-
-## Ús
-Introdueix una adreça a inici, selecciona l'adreça trobada i apareixerà un marcador al punt. Alternativament fes click sobre l'icona bandera i seguidament fes click en un punt al mapa i apareixerà un marcador al punt seleccionat i s'indicarà l'adreça corresponent. 
-Fes el mateix per una adreça destí i es mostrarà un segon marcador, la ruta entre l'inici i el destí, i la informació de la ruta.
-Es poden moure els marcadors i recalcularà la ruta. Per eliminar un marcador fer doble-click sobre el marcador o el text de l'adreça. Per obtenir informació de la ruta fer click sobre la ruta.
-
-
-Per obtenir la ruta segons el Problema del Venedor Ambulant (TSP) agregar més cercadors fent click al botó "+". Es poden afegir tans cercadors com es vulgui. Per crear una ruta tancada amb inici igual a final fer marcar la opció "Ruta circular".
- A l'introduir la nova adreça recalcularà la ruta solucionant el TSP i mostrará l'ordre de la ruta a seguir.

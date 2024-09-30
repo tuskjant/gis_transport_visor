@@ -9,8 +9,8 @@ import { RoutingService, RoutingData } from "./RoutingService";
  * API route service
  */
 export class Routing implements RoutingService {
-    //private BASE_URL: string = "http://127.0.0.1:5000/";
-    private BASE_URL: string = "http://router.project-osrm.org/";
+    private BASE_URL: string = "http://127.0.0.1:5000/";
+    //private BASE_URL: string = "http://router.project-osrm.org/";
     private ROUTE_URL_2P: string = "route/v1/driving/";
     private ROUTE_URL_3P: string = "trip/v1/driving/";
     private APIsource: string = "first"; //first point is always starting point
