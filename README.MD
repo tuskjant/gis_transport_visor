@@ -1,16 +1,9 @@
-<<<<<<< HEAD
 # GIS Integral de Transport Viewer
 ## Overview
 Viewer that is part of the GIS Integral de Transport project, using the OSRM API for route calculation:
 + Route between two points
 + For more than two points, it solves the Travelling Salesman Problem (TSP).
 It's a web-based UI built using TypeScript and Leaflet for map rendering and route calculation.
-=======
-# GIS Integral de Transport
-Visor que forma part del projecte GIS Integral de Transport, fa servir l'API de OSRM pel càlcul de rutes:
-- Ruta entre dos punts
-- Per a més de dos punts resol el Problema del Venedor Ambulant (Travelling Salesman Problem)
->>>>>>> be4eb3c5ab85a0db1fcd79ec7be308f8bf0d1753
 
 ### Features
 - Map visualization with Leaflet
